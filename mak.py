@@ -722,8 +722,9 @@ def usage(e=None,command=None):
 		print e
 		print ""
 	name = os.path.basename(sys.argv[0])
-	if command == None or command == 'help':
-		print '''                                                    ,^.
+	if command == None or command == 'help' or command == 'all':
+		print '''Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
+                                                    ,^.
                             /\\                     /   \\
                 ,^.        / /                    /    /
                 \\  \\      / /                    /    /
@@ -734,7 +735,7 @@ def usage(e=None,command=None):
          __________/|  o    Mac Army Knife   o  |'              \\
         |____________\\_________________________/_________________\\
 
-                (All the stuff that should be part of jamf)
+I combined all of my Mac customization scripts into this script.
 
 Usage: %s command options
 
@@ -751,31 +752,42 @@ Commands
 	shell_paths
 	systemsetup
 
-For command help
+For help
 	%s help <command name>
-''' % (name,name)
-	elif command == 'ard':
+	%s help all  # will display help for all commands
+
+------------------------------------------------------------------------------------------
+''' % (name,name,name)
+	if command == 'ard' or command == 'all':
 		ardHelp(name)
-	elif command == 'disable_touristd':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'disable_touristd' or command == 'all':
 		disable_touristdHelp(name)
-	elif command == 'hack_jamf_hooks':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'hack_jamf_hooks' or command == 'all':
 		hack_jamf_hooksHelp(name)
-	elif command == 'c':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'locatedb' or command == 'all':
 		locatedbHelp(name)
-	elif command == 'launchdaemon':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'launchdaemon' or command == 'all':
 		launchdaemonHelp(name)
-	elif command == 'network':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'network' or command == 'all':
 		networkHelp(name)
-	elif command == 'pref':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'pref' or command == 'all':
 		prefHelp(name)
-	elif command == 'set_volume':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'set_volume' or command == 'all':
 		set_volumeHelp(name)
-	elif command == 'shell_paths':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'shell_paths' or command == 'all':
 		shell_pathsHelp(name)
-	elif command == 'systemsetup':
+		print("------------------------------------------------------------------------------------------")
+	if command == 'systemsetup' or command == 'all':
 		systemsetupHelp(name)
-	else:
-		print "Unknown command: "+command;
+		print("------------------------------------------------------------------------------------------")
 
 	if e:
 		sys.exit(64)
@@ -900,7 +912,6 @@ def locatedbHelp(name):
 
 	Loads locate db
 	''' % (name)
-	print ""
 
 def locatedb(args):
 	sh( '/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist' )
@@ -923,7 +934,6 @@ def launchdaemonHelp(name):
 		%s launchdaemon example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
 		%s launchdaemon example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
 	''' % (name,name,name,name)
-	print ""
 
 def parseLaunchdPlist(args):
 	hash = dict()
@@ -1020,19 +1030,21 @@ def launchdaemon(args):
 	######################################################################################
 
 def networkHelp(name):
-	print ""
+	print '''Usage: %s network ...?
+
+	This one isn't done.
+	''' % (name)
 
 def network(args):
 	print("network")
-# /usr/sbin/network setup -setdnsservers Ethernet 172.20.120.20
 
-	######################################################################################
-	######################################################################################
-	######################################################################################
 	######################################################################################
 
 def prefHelp(name):
 	print '''Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
+
+	The following options specify which file to modify when the default is in the user
+	level domain ("*.User.*")
 
     -p <path>       Path to the user directory
     -P <path>       Complete path to the plist file (all script path logic is skipped)
@@ -1046,8 +1058,12 @@ def prefHelp(name):
 
 	print '''
 	Example:
-	%s pref -p "/System/Library/User Template/English.lproj" Clock.User.ShowSeconds
-	''' % (name)
+	%s pref SoftwareUpdate.Computer.AutoUpdate=false
+	%s pref -p /Users/admin Clock.User.ShowSeconds
+	%s pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
+	%s pref -u admin Clock.User.ShowSeconds
+	%s pref -T Clock.User.ShowSeconds
+	''' % (name,name,name,name,name)
 
 def macosPref(args):
 	delimiter = '='
@@ -1146,20 +1162,23 @@ def macosPref(args):
 			sh2( command )
 
 	######################################################################################
-	######################################################################################
-	######################################################################################
-	######################################################################################
 
 def set_volumeHelp(name):
-	print "<Volume> <Output Volume> <Input Volume>"
+	print '''Usage: %s set_volume <Volume> [<Output Volume>] [<Input Volume>]
+
+	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
+
+	Example:
+	%s set_volume 0     # Muted
+	%s set_volume 3.5   # Half
+	%s set_volume 7     # Max
+	''' % (name,name,name,name)
 
 def set_volume(args):
-	print("set_volume")
-
 	if len(args) > 0 and args[0] != "-":
 		if debug:
 			print "osascript -e 'set volume args[0]'\n"
-		sh( "osascript -e 'set volume args[0]'" )
+		sh( "osascript -e 'set volume "+args[0]+"'" )
 
 	if len(args) > 1 and args[1] != "-":
 		if debug:
@@ -1169,17 +1188,18 @@ def set_volume(args):
 	if len(args) > 2 and args[2] != "-":
 		if debug:
 			print "osascript -e 'set volume input volume args[2]'\n"
-		sh( "osascript -e 'set volume input volume args[2]'" )
+		sh( "osascript -e 'set volume input volume "+args[2]+"'" )
 
-# 7
-
-	######################################################################################
-	######################################################################################
-	######################################################################################
 	######################################################################################
 
 def shell_pathsHelp(name):
-	print "<path> <name>"
+	print '''Usage: %s shell_paths <path> <name>
+
+	Adds the <path> to /private/etc/paths.d/<name>
+
+	Example:
+	%s shell_paths /usr/local/bin usr_local_bin
+	''' % (name,name)
 
 def shell_paths(args):
 	print("shell_paths")
@@ -1191,17 +1211,18 @@ def shell_paths(args):
 			file.write(search)
 			file.close()
 
-# echo "/anaconda/bin" > anaconda
-# echo "/anaconda/sbin" >> /private/etc/paths.d/anaconda
-
-
-	######################################################################################
-	######################################################################################
-	######################################################################################
 	######################################################################################
 
 def systemsetupHelp(name):
-	print "<Zone> [<ntp server>]"
+	print '''Usage: %s systemsetup <Zone> [<ntp server>]
+
+	Sets the timezone to <Zone> and if specified, the time server to <ntp server>.
+	For a list of timezones look in /usr/share/zoneinfo.
+
+	Example:
+	%s systemsetup America/Denver
+	%s systemsetup America/Denver time.apple.com
+	''' % (name,name,name)
 
 def systemsetup(args):
 	print("systemsetup")
@@ -1211,13 +1232,6 @@ def systemsetup(args):
 		sh( '/usr/sbin/systemsetup', '-setnetworktimeserver', args[1] )
 		sh( 'ntpdate', '-u', args[1] )
 
-# Prefs Global TimeZone (systemsetup)
-# 	America/Denver
-# 	time.utah.edu
-
-	######################################################################################
-	######################################################################################
-	######################################################################################
 	######################################################################################
 
 def main():
