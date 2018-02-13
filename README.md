@@ -209,4 +209,3 @@ Usage: mak.py <Zone> [<ntp server>]
 	mak.py systemsetup America/Denver time.apple.com
 	
 ------------------------------------------------------------------------------------------
-[e403-imac-sb106:~] root# 
