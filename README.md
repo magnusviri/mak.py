@@ -13,7 +13,12 @@ Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac
          __________/|  o    Mac Army Knife   o  |'              \
         |____________\_________________________/_________________\
 
-I combined all of my Mac customization scripts into this script.
+I'm combining all of my Mac customization scripts into this script.  All of this info is
+on the web scattered all over and a lot of this is just shortcuts to built-in commands.
+Why?  I'm tired of looking it up on the web and making scripts or profiles or whatever.  I
+just wanted a one stop shop as easy "System Preferences" but from the command line.
+
+https://github.com/magnusviri/mak.py
 
 Usage: mak.py command options
 
@@ -24,9 +29,10 @@ Commands
 	help
 	locatedb
 	launchdaemon
-	network
+	networksetup
 	pref
 	set_volume
+	set_zone_ntp
 	shell_paths
 	systemsetup
 
@@ -60,8 +66,9 @@ Usage: mak.py ard [-c] &lt;username[,username..]&gt; [setting[ setting..]]
 		mak.py ard admin
 		mak.py ard -r admin,james
 		mak.py ard -r admin -ChangeSettings
-	
+
 ------------------------------------------------------------------------------------------
+
 Usage: mak.py disable_touristd
 
 	Disables all possible tourist dialogs for the current OS.  This uses the pref action
@@ -70,18 +77,21 @@ Usage: mak.py disable_touristd
 	Examples:
 		mak.py disable_touristd	        # disables tourist for current user
 		mak.py disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
-	
+
 ------------------------------------------------------------------------------------------
+
 Usage: mak.py hack_jamf_hooks
 
 	Changes loginhook.sh checkJSSConnection from 0 to 6 (this waits for a network connection before the jamf any login policies will run).
-	
+
 ------------------------------------------------------------------------------------------
+
 Usage: mak.py locatedb
 
 	Loads locate db
-	
+
 ------------------------------------------------------------------------------------------
+
 Usage: mak.py launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program arg&gt;..] ; &lt;key&gt; &lt;value&gt; [&lt;key&gt; &lt;value&gt;..]
 
 	plist_file must be of form /path/label.plist
@@ -96,13 +106,21 @@ Usage: mak.py launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program a
 		mak.py launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
 		mak.py launchdaemon example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
 		mak.py launchdaemon example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
-	
-------------------------------------------------------------------------------------------
-Usage: mak.py network ...?
 
-	This one isn't done.
-	
 ------------------------------------------------------------------------------------------
+
+Usage: mak.py networksetup ...
+
+	This is just a shortcut to /usr/sbin/networksetup.  See `man networksetup` for options.
+
+	Why?  Because I'll forget about networksetup otherwise (it's not like I use the command
+	very much).
+
+	Example:
+		mak.py networksetup -setdnsservers Ethernet 172.20.120.20
+
+------------------------------------------------------------------------------------------
+
 Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 
 	The following options specify which file to modify when the default is in the user
@@ -180,8 +198,9 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 		mak.py pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
 		mak.py pref -u admin Clock.User.ShowSeconds
 		mak.py pref -T Clock.User.ShowSeconds
-	
+
 ------------------------------------------------------------------------------------------
+
 Usage: mak.py set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
 
 	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
@@ -190,24 +209,39 @@ Usage: mak.py set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volum
 		mak.py set_volume 0     # Muted
 		mak.py set_volume 3.5   # Half
 		mak.py set_volume 7     # Max
-	
+
 ------------------------------------------------------------------------------------------
+
+Usage: mak.py set_zone_ntp &lt;Zone&gt; &lt;ntp server&gt;
+
+	Sets the timezone to &lt;Zone&gt; and the time server to &lt;ntp server&gt;.  For a list of
+	timezones look in /usr/share/zoneinfo.
+
+	Examples:
+		mak.py set_zone_ntp America/Denver time.apple.com
+
+------------------------------------------------------------------------------------------
+
 Usage: mak.py shell_paths &lt;path&gt; &lt;name&gt;
 
 	Adds the &lt;path&gt; to /private/etc/paths.d/&lt;name&gt;
 
 	Example:
 		mak.py shell_paths /usr/local/bin usr_local_bin
-	
-------------------------------------------------------------------------------------------
-Usage: mak.py systemsetup &lt;Zone&gt; [&lt;ntp server&gt;]
 
-	Sets the timezone to &lt;Zone&gt; and if specified, the time server to &lt;ntp server&gt;.
-	For a list of timezones look in /usr/share/zoneinfo.
+------------------------------------------------------------------------------------------
+
+Usage: mak.py systemsetup ...
+
+	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
+
+	Why?  Because I'll forget about systemsetup otherwise (it's not like I use the command
+	very much).
 
 	Examples:
-		mak.py systemsetup America/Denver
-		mak.py systemsetup America/Denver time.apple.com
-	
+		mak.py systemsetup -settimezone America/Denver
+		mak.py systemsetup -setusingnetworktime on
+		mak.py systemsetup -setnetworktimeserver time.apple.com
+
 ------------------------------------------------------------------------------------------
 </pre>
