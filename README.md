@@ -1,7 +1,7 @@
 # mak.py
-
-Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
 <pre>
+Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
+
                                                     ,^.
                             /\                     /   \
                 ,^.        / /                    /    /
@@ -12,7 +12,7 @@ Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac
                     `/                         \  /_____________
          __________/|  o    Mac Army Knife   o  |'              \
         |____________\_________________________/_________________\
-</pre>
+
 I combined all of my Mac customization scripts into this script.
 
 Usage: mak.py command options
@@ -210,3 +210,4 @@ Usage: mak.py <Zone> [<ntp server>]
 	mak.py systemsetup America/Denver time.apple.com
 	
 ------------------------------------------------------------------------------------------
+</pre>
