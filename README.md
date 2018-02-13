@@ -1,5 +1,6 @@
 # mak.py
 
+<pre>
 Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
 
                                                     ,^.
@@ -210,3 +211,4 @@ Usage: mak.py &lt;Zone&gt; [&lt;ntp server&gt;]
 	mak.py systemsetup America/Denver time.apple.com
 	
 ------------------------------------------------------------------------------------------
+</pre>
