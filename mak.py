@@ -722,8 +722,9 @@ def usage(e=None,command=None):
 		print e
 		print ""
 	name = os.path.basename(sys.argv[0])
+	text = ""
 	if command == None or command == 'help' or command == 'all':
-		print '''Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
+		text += '''Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
                                                     ,^.
                             /\\                     /   \\
                 ,^.        / /                    /    /
@@ -735,7 +736,12 @@ def usage(e=None,command=None):
          __________/|  o    Mac Army Knife   o  |'              \\
         |____________\\_________________________/_________________\\
 
-I combined all of my Mac customization scripts into this script.
+I'm combining all of my Mac customization scripts into this script.  All of this info is
+on the web scattered all over and a lot of this is just shortcuts to built-in commands.
+Why?  I'm tired of looking it up on the web and making scripts or profiles or whatever.  I
+just wanted a one stop shop as easy "System Preferences" but from the command line.
+
+https://github.com/magnusviri/mak.py
 
 Usage: %s command options
 
@@ -746,9 +752,10 @@ Commands
 	help
 	locatedb
 	launchdaemon
-	network
+	networksetup
 	pref
 	set_volume
+	set_zone_ntp
 	shell_paths
 	systemsetup
 
@@ -759,35 +766,42 @@ For help
 ------------------------------------------------------------------------------------------
 ''' % (name,name,name)
 	if command == 'ard' or command == 'all':
-		ardHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += ardHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'disable_touristd' or command == 'all':
-		disable_touristdHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += disable_touristdHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'hack_jamf_hooks' or command == 'all':
-		hack_jamf_hooksHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += hack_jamf_hooksHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'locatedb' or command == 'all':
-		locatedbHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += locatedbHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'launchdaemon' or command == 'all':
-		launchdaemonHelp(name)
-		print("------------------------------------------------------------------------------------------")
-	if command == 'network' or command == 'all':
-		networkHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += launchdaemonHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
+	if command == 'networksetup' or command == 'all':
+		text += networksetupHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'pref' or command == 'all':
-		prefHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += prefHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'set_volume' or command == 'all':
-		set_volumeHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += set_volumeHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
+	if command == 'set_zone_ntp' or command == 'all':
+		text += set_zone_ntpHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'shell_paths' or command == 'all':
-		shell_pathsHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += shell_pathsHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
 	if command == 'systemsetup' or command == 'all':
-		systemsetupHelp(name)
-		print("------------------------------------------------------------------------------------------")
+		text += systemsetupHelp(name)
+		text += "------------------------------------------------------------------------------------------\n"
+	if True:
+		text = re.sub(r'<', r'&lt;', text)
+		text = re.sub(r'>', r'&gt;', text)
+	print( text )
 
 	if e:
 		sys.exit(64)
@@ -797,7 +811,8 @@ For help
 	######################################################################################
 
 def ardHelp(name):
-	print '''Usage: %s ard [-c] <username[,username..]> [setting[ setting..]]
+	return '''
+Usage: %s ard [-c] <username[,username..]> [setting[ setting..]]
 
 	Configures ARD sharing for specific users and restarts the service.
 
@@ -821,7 +836,8 @@ def ardHelp(name):
 		%s ard admin
 		%s ard -r admin,james
 		%s ard -r admin -ChangeSettings
-	''' % (name,name,name,name)
+
+''' % (name,name,name,name)
 
 def ard(args):
 	kickstart = '/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart';
@@ -863,15 +879,17 @@ def ard(args):
 	######################################################################################
 
 def disable_touristdHelp(name):
-	print '''Usage: %s disable_touristd
+	return '''
+Usage: %s disable_touristd
 
 	Disables all possible tourist dialogs for the current OS.  This uses the pref action
 	so see that for options (`%s help pref`)
 
-	Example:
-	%s disable_touristd	        # disables tourist for current user
-	%s disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
-	''' % (name,name,name,name)
+	Examples:
+		%s disable_touristd	        # disables tourist for current user
+		%s disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
+
+''' % (name,name,name,name)
 
 def disable_touristd(args):
 	#https://carlashley.com/2016/10/19/com-apple-touristd/
@@ -897,10 +915,12 @@ def disable_touristd(args):
 	######################################################################################
 
 def hack_jamf_hooksHelp(name):
-	print '''Usage: %s hack_jamf_hooks
+	return '''
+Usage: %s hack_jamf_hooks
 
 	Changes loginhook.sh checkJSSConnection from 0 to 6 (this waits for a network connection before the jamf any login policies will run).
-	''' % (name)
+
+''' % (name)
 
 def hack_jamf_hooks(args):
 	sh( 'sed -i .orig "s/checkJSSConnection -retry 0 ;/checkJSSConnection -retry 6 ;/g" /Library/Application\ Support/JAMF/ManagementFrameworkScripts/loginhook.sh' )
@@ -908,10 +928,12 @@ def hack_jamf_hooks(args):
 	######################################################################################
 
 def locatedbHelp(name):
-	print '''Usage: %s locatedb
+	return '''
+Usage: %s locatedb
 
 	Loads locate db
-	''' % (name)
+
+''' % (name)
 
 def locatedb(args):
 	sh( '/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist' )
@@ -919,7 +941,8 @@ def locatedb(args):
 	######################################################################################
 
 def launchdaemonHelp(name):
-	print '''Usage: %s launchdaemon <plist_file> <program arg> [<program arg>..] ; <key> <value> [<key> <value>..]
+	return '''
+Usage: %s launchdaemon <plist_file> <program arg> [<program arg>..] ; <key> <value> [<key> <value>..]
 
 	plist_file must be of form /path/label.plist
 
@@ -930,10 +953,11 @@ def launchdaemonHelp(name):
 	https://en.wikipedia.org/wiki/Launchd
 
 	Examples:
-        %s launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
+		%s launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
 		%s launchdaemon example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
 		%s launchdaemon example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
-	''' % (name,name,name,name)
+
+''' % (name,name,name,name)
 
 def parseLaunchdPlist(args):
 	hash = dict()
@@ -1029,19 +1053,28 @@ def launchdaemon(args):
 
 	######################################################################################
 
-def networkHelp(name):
-	print '''Usage: %s network ...?
+def networksetupHelp(name):
+	return '''
+Usage: %s networksetup ...
 
-	This one isn't done.
-	''' % (name)
+	This is just a shortcut to /usr/sbin/networksetup.  See `man networksetup` for options.
 
-def network(args):
-	print("network")
+	Why?  Because I'll forget about networksetup otherwise (it's not like I use the command
+	very much).
+
+	Example:
+		%s networksetup -setdnsservers Ethernet 172.20.120.20
+
+''' % (name,name)
+
+def networksetup(args):
+	sh( '/usr/sbin/networksetup ' + " ".join(args) )
 
 	######################################################################################
 
 def prefHelp(name):
-	print '''Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
+	text = '''
+Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 
 	The following options specify which file to modify when the default is in the user
 	level domain ("*.User.*")
@@ -1051,19 +1084,22 @@ def prefHelp(name):
     -u <username>   For user defaults, use this username
     -T              Use template: "/System/Library/User Template/English.lproj"
 
-	Supported settings:''' % (name)
+	Supported settings:
+''' % (name)
 	for pref, pref_data in sorted( prefs.iteritems() ):
 		if 'help' in pref_data:
-			print( "\t\t" + pref_data['help'] )
+			text += "\t\t" + pref_data['help'] + "\n"
 
-	print '''
-	Example:
-	%s pref SoftwareUpdate.Computer.AutoUpdate=false
-	%s pref -p /Users/admin Clock.User.ShowSeconds
-	%s pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
-	%s pref -u admin Clock.User.ShowSeconds
-	%s pref -T Clock.User.ShowSeconds
-	''' % (name,name,name,name,name)
+	text += '''
+	Examples:
+		%s pref SoftwareUpdate.Computer.AutoUpdate=false
+		%s pref -p /Users/admin Clock.User.ShowSeconds
+		%s pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
+		%s pref -u admin Clock.User.ShowSeconds
+		%s pref -T Clock.User.ShowSeconds
+
+''' % (name,name,name,name,name)
+	return( text )
 
 def macosPref(args):
 	delimiter = '='
@@ -1164,15 +1200,17 @@ def macosPref(args):
 	######################################################################################
 
 def set_volumeHelp(name):
-	print '''Usage: %s set_volume <Volume> [<Output Volume>] [<Input Volume>]
+	return '''
+Usage: %s set_volume <Volume> [<Output Volume>] [<Input Volume>]
 
 	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
 
-	Example:
-	%s set_volume 0     # Muted
-	%s set_volume 3.5   # Half
-	%s set_volume 7     # Max
-	''' % (name,name,name,name)
+	Examples:
+		%s set_volume 0     # Muted
+		%s set_volume 3.5   # Half
+		%s set_volume 7     # Max
+
+''' % (name,name,name,name)
 
 def set_volume(args):
 	if len(args) > 0 and args[0] != "-":
@@ -1192,14 +1230,36 @@ def set_volume(args):
 
 	######################################################################################
 
+def set_zone_ntpHelp(name):
+	return '''
+Usage: %s set_zone_ntp <Zone> <ntp server>
+
+	Sets the timezone to <Zone> and the time server to <ntp server>.  For a list of
+	timezones look in /usr/share/zoneinfo.
+
+	Examples:
+		%s set_zone_ntp America/Denver time.apple.com
+
+''' % (name,name)
+
+def set_zone_ntp(args):
+	systemsetup( '-settimezone', args[0] )
+	systemsetup( '-setusingnetworktime', 'on' )
+	systemsetup( '-setnetworktimeserver', args[1] )
+	sh( 'ntpdate', '-u', args[1] )
+
+	######################################################################################
+
 def shell_pathsHelp(name):
-	print '''Usage: %s shell_paths <path> <name>
+	return '''
+Usage: %s shell_paths <path> <name>
 
 	Adds the <path> to /private/etc/paths.d/<name>
 
 	Example:
-	%s shell_paths /usr/local/bin usr_local_bin
-	''' % (name,name)
+		%s shell_paths /usr/local/bin usr_local_bin
+
+''' % (name,name)
 
 def shell_paths(args):
 	print("shell_paths")
@@ -1214,23 +1274,23 @@ def shell_paths(args):
 	######################################################################################
 
 def systemsetupHelp(name):
-	print '''Usage: %s systemsetup <Zone> [<ntp server>]
+	return '''
+Usage: %s systemsetup ...
 
-	Sets the timezone to <Zone> and if specified, the time server to <ntp server>.
-	For a list of timezones look in /usr/share/zoneinfo.
+	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
 
-	Example:
-	%s systemsetup America/Denver
-	%s systemsetup America/Denver time.apple.com
-	''' % (name,name,name)
+	Why?  Because I'll forget about systemsetup otherwise (it's not like I use the command
+	very much).
+
+	Examples:
+		%s systemsetup -settimezone America/Denver
+		%s systemsetup -setusingnetworktime on
+		%s systemsetup -setnetworktimeserver time.apple.com
+
+''' % (name,name,name,name)
 
 def systemsetup(args):
-	print("systemsetup")
-	sh( '/usr/sbin/systemsetup', '-settimezone', args[0] )
-	if len(args) > 0:
-		sh( '/usr/sbin/systemsetup', '-setusingnetworktime', 'on' )
-		sh( '/usr/sbin/systemsetup', '-setnetworktimeserver', args[1] )
-		sh( 'ntpdate', '-u', args[1] )
+	sh( '/usr/sbin/systemsetup ' + " ".join(args) )
 
 	######################################################################################
 
@@ -1271,12 +1331,14 @@ def main():
 		locatedb(args[1:])
 	elif command == "launchdaemon":
 		launchdaemon(args[1:])
-	elif command == "network":
-		network(args[1:])
+	elif command == "networksetup":
+		networksetup(args[1:])
 	elif command == "pref":
 		macosPref(args[1:])
 	elif command == "set_volume":
 		set_volume(args[1:])
+	elif command == "set_zone_ntp":
+		set_zone_ntp(args[1:])
 	elif command == "shell_paths":
 		shell_paths(args[1:])
 	elif command == "systemsetup":
