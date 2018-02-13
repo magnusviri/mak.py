@@ -2,7 +2,6 @@
 
 <pre>
 Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
-
                                                     ,^.
                             /\                     /   \
                 ,^.        / /                    /    /
@@ -68,9 +67,9 @@ Usage: mak.py disable_touristd
 	Disables all possible tourist dialogs for the current OS.  This uses the pref action
 	so see that for options (`mak.py help pref`)
 
-	Example:
-	mak.py disable_touristd	        # disables tourist for current user
-	mak.py disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
+	Examples:
+		mak.py disable_touristd	        # disables tourist for current user
+		mak.py disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
 	
 ------------------------------------------------------------------------------------------
 Usage: mak.py hack_jamf_hooks
@@ -94,7 +93,7 @@ Usage: mak.py launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program a
 	https://en.wikipedia.org/wiki/Launchd
 
 	Examples:
-        mak.py launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
+		mak.py launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
 		mak.py launchdaemon example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
 		mak.py launchdaemon example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
 	
@@ -175,40 +174,40 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 		SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11)
 		Tourist.User.disable - Use the disable_touristd command, not the pref command ; user domain (any OS)
 
-	Example:
-	mak.py pref SoftwareUpdate.Computer.AutoUpdate=false
-	mak.py pref -p /Users/admin Clock.User.ShowSeconds
-	mak.py pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
-	mak.py pref -u admin Clock.User.ShowSeconds
-	mak.py pref -T Clock.User.ShowSeconds
+	Examples:
+		mak.py pref SoftwareUpdate.Computer.AutoUpdate=false
+		mak.py pref -p /Users/admin Clock.User.ShowSeconds
+		mak.py pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
+		mak.py pref -u admin Clock.User.ShowSeconds
+		mak.py pref -T Clock.User.ShowSeconds
 	
 ------------------------------------------------------------------------------------------
-Usage: mak.py &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
+Usage: mak.py set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
 
 	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
 
-	Example:
-	mak.py set_volume 0     # Muted
-	mak.py set_volume 3.5   # Half
-	mak.py set_volume 7     # Max
+	Examples:
+		mak.py set_volume 0     # Muted
+		mak.py set_volume 3.5   # Half
+		mak.py set_volume 7     # Max
 	
 ------------------------------------------------------------------------------------------
-Usage: mak.py &lt;path&gt; &lt;name&gt;
+Usage: mak.py shell_paths &lt;path&gt; &lt;name&gt;
 
 	Adds the &lt;path&gt; to /private/etc/paths.d/&lt;name&gt;
 
 	Example:
-	mak.py shell_paths /usr/local/bin usr_local_bin
+		mak.py shell_paths /usr/local/bin usr_local_bin
 	
 ------------------------------------------------------------------------------------------
-Usage: mak.py &lt;Zone&gt; [&lt;ntp server&gt;]
+Usage: mak.py systemsetup &lt;Zone&gt; [&lt;ntp server&gt;]
 
 	Sets the timezone to &lt;Zone&gt; and if specified, the time server to &lt;ntp server&gt;.
 	For a list of timezones look in /usr/share/zoneinfo.
 
-	Example:
-	mak.py systemsetup America/Denver
-	mak.py systemsetup America/Denver time.apple.com
+	Examples:
+		mak.py systemsetup America/Denver
+		mak.py systemsetup America/Denver time.apple.com
 	
 ------------------------------------------------------------------------------------------
 </pre>
