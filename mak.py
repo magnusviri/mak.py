@@ -26,6 +26,10 @@ import sys
 from subprocess import Popen, PIPE
 jamf = False
 debug = False
+target_os = None
+mak_commands = {}
+
+##########################################################################################
 
 prefs = {
 	#########
@@ -675,144 +679,15 @@ prefs = {
 
 os_age = [ '10.12', '10.11', '10.10', '10.9', '10.8', '10.7', '10.6', '10.5', '10.4', '10.3', '10.2', '10.1', '10.0', '0' ]
 
-def sh(cmd):
-	if debug:
-		print( cmd )
-		result = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE).communicate()[0]
-		if result != '':
-			print( result )
-		return result
-	else:
-		return Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE).communicate()[0]
+##########################################################################################
 
-def sh2(cmd):
-	if debug:
-		print( cmd )
-		result = Popen(cmd).communicate()[0]
-		if result != '':
-			print( result )
-		return result
-	else:
-		return Popen(cmd).communicate()[0]
-
-def get_os_version():
-	return sh("sw_vers -productVersion").rstrip('\n')
-
-def get_short_os_version():
-	return re.sub(r'(\d+\.\d+).*', r'\1', get_os_version())
-
-def find_os():
-	cur_os = get_short_os_version()
-	cur_ii = -1
-	ii = 0
-	for test_os in os_age:
-		if test_os == cur_os:
-			cur_ii = ii
-			break
-		ii += 1
-	return cur_ii
-
-	######################################################################################
-	######################################################################################
-	######################################################################################
-	######################################################################################
-
-def usage(e=None,command=None):
-	if e:
-		print e
-		print ""
-	name = os.path.basename(sys.argv[0])
-	text = ""
-	if command == None or command == 'help' or command == 'all':
-		text += '''Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
-                                                    ,^.
-                            /\\                     /   \\
-                ,^.        / /                    /    /
-                \\  \\      / /                    /    /
-                 \\\\ \\    / /                    /  ///
-                  \\\\ \\  / /                    /  ///
-                   \\  \\/_/____________________/    /
-                    `/                         \\  /_____________
-         __________/|  o    Mac Army Knife   o  |'              \\
-        |____________\\_________________________/_________________\\
-
-I'm combining all of my Mac customization scripts into this script.  All of this info is
-on the web scattered all over and a lot of this is just shortcuts to built-in commands.
-Why?  I'm tired of looking it up on the web and making scripts or profiles or whatever.  I
-just wanted a one stop shop as easy "System Preferences" but from the command line.
-
-https://github.com/magnusviri/mak.py
-
-Usage: %s command options
-
-Commands
-	ard
-	disable_touristd
-	hack_jamf_hooks
-	help
-	locatedb
-	launchdaemon
-	networksetup
-	pref
-	set_volume
-	set_zone_ntp
-	shell_paths
-	systemsetup
-
-For help
-	%s help <command name>
-	%s help all  # will display help for all commands
-
-------------------------------------------------------------------------------------------
-''' % (name,name,name)
-	if command == 'ard' or command == 'all':
-		text += ardHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'disable_touristd' or command == 'all':
-		text += disable_touristdHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'hack_jamf_hooks' or command == 'all':
-		text += hack_jamf_hooksHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'locatedb' or command == 'all':
-		text += locatedbHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'launchdaemon' or command == 'all':
-		text += launchdaemonHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'networksetup' or command == 'all':
-		text += networksetupHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'pref' or command == 'all':
-		text += prefHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'set_volume' or command == 'all':
-		text += set_volumeHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'set_zone_ntp' or command == 'all':
-		text += set_zone_ntpHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'shell_paths' or command == 'all':
-		text += shell_pathsHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if command == 'systemsetup' or command == 'all':
-		text += systemsetupHelp(name)
-		text += "------------------------------------------------------------------------------------------\n"
-	if False:
-		text = re.sub(r'<', r'&lt;', text)
-		text = re.sub(r'>', r'&gt;', text)
-	print( text )
-
-	if e:
-		sys.exit(64)
-	else:
-		sys.exit(0)
-
-	######################################################################################
+mak_commands['ard'] = {
+	'help':'ardHelp',
+	'main':'ard',
+}
 
 def ardHelp(name):
-	return '''
-Usage: %s ard [-c] <username[,username..]> [setting[ setting..]]
+	return '''Usage: %s <options> ard [-c] <username[,username..]> [setting[ setting..]]
 
 	Configures ARD sharing for specific users and restarts the service.
 
@@ -876,11 +751,15 @@ def ard(args):
 	sh( kickstart + ' -configure -access -on -privs ' + ' '.join(privs) + ' -users ' + args[0] )
 	sh( kickstart + ' -activate -restart -agent' )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['disable_touristd'] = {
+	'help':'disable_touristdHelp',
+	'main':'disable_touristd',
+}
 
 def disable_touristdHelp(name):
-	return '''
-Usage: %s disable_touristd
+	return '''Usage: %s <options> disable_touristd
 
 	Disables all possible tourist dialogs for the current OS.  This uses the pref action
 	so see that for options (`%s help pref`)
@@ -912,11 +791,15 @@ def disable_touristd(args):
 	args.append( "Tourist.User.disable" )
 	macosPref(args)
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['hack_jamf_hooks'] = {
+	'help':'hack_jamf_hooksHelp',
+	'main':'hack_jamf_hooks',
+}
 
 def hack_jamf_hooksHelp(name):
-	return '''
-Usage: %s hack_jamf_hooks
+	return '''Usage: %s <options> hack_jamf_hooks
 
 	Changes loginhook.sh checkJSSConnection from 0 to 6 (this waits for a network connection before the jamf any login policies will run).
 
@@ -925,11 +808,15 @@ Usage: %s hack_jamf_hooks
 def hack_jamf_hooks(args):
 	sh( 'sed -i .orig "s/checkJSSConnection -retry 0 ;/checkJSSConnection -retry 6 ;/g" /Library/Application\ Support/JAMF/ManagementFrameworkScripts/loginhook.sh' )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['locatedb'] = {
+	'help':'locatedbHelp',
+	'main':'locatedb',
+}
 
 def locatedbHelp(name):
-	return '''
-Usage: %s locatedb
+	return '''Usage: %s <options> locatedb
 
 	Loads locate db
 
@@ -938,11 +825,15 @@ Usage: %s locatedb
 def locatedb(args):
 	sh( '/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist' )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['launchdaemon'] = {
+	'help':'launchdaemonHelp',
+	'main':'launchdaemon',
+}
 
 def launchdaemonHelp(name):
-	return '''
-Usage: %s launchdaemon <plist_file> <program arg> [<program arg>..] ; <key> <value> [<key> <value>..]
+	return '''Usage: %s <options> launchdaemon <plist_file> <program arg> [<program arg>..] ; <key> <value> [<key> <value>..]
 
 	plist_file must be of form /path/label.plist
 
@@ -1051,11 +942,15 @@ def launchdaemon(args):
 	plistlib.writePlist( plist, path )
 	sh( 'launchctl load ' + path )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['networksetup'] = {
+	'help':'networksetupHelp',
+	'main':'networksetup',
+}
 
 def networksetupHelp(name):
-	return '''
-Usage: %s networksetup ...
+	return '''Usage: %s <options> networksetup ...
 
 	This is just a shortcut to /usr/sbin/networksetup.  See `man networksetup` for options.
 
@@ -1070,11 +965,15 @@ Usage: %s networksetup ...
 def networksetup(args):
 	sh( '/usr/sbin/networksetup ' + " ".join(args) )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['pref'] = {
+	'help':'prefHelp',
+	'main':'pref',
+}
 
 def prefHelp(name):
-	text = '''
-Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
+	text = '''Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 
 	The following options specify which file to modify when the default is in the user
 	level domain ("*.User.*")
@@ -1101,7 +1000,7 @@ Usage: %s pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 ''' % (name,name,name,name,name)
 	return( text )
 
-def macosPref(args):
+def pref(args):
 	delimiter = '='
 	try:
 		(optargs, args) = getopt.getopt(args, "p:P:u:T")
@@ -1121,28 +1020,31 @@ def macosPref(args):
 		usage('You must specify arguments', 'pref')
 	sys_args = args
 
+	# Find the command for the OS
 	cur_ii = find_os()
 	commands = []
 	not_found = ""
 
 	found = False
-	splitty = args[0].split(delimiter, 1)
-	if splitty[0] in prefs:
-		os_pref = prefs[splitty[0]]['versions']
+	command_parts = args[0].split(delimiter, 1)
+
+
+	if command_parts[0] in prefs:
+		commands_for_this_os = prefs[command_parts[0]]['versions']
 		ii = 0
 		pref_os = ''
 		for test_os in os_age:
-			if test_os in os_pref:
+			if test_os in commands_for_this_os:
 				if cur_ii <= ii:
 					pref_os = test_os
 					break
 			ii += 1
-		if pref_os in os_pref:
-			if 'defaults' in os_pref[pref_os]:
-				defaults_commands = os_pref[pref_os]['defaults']
+		if pref_os in commands_for_this_os:
+			if 'defaults' in commands_for_this_os[pref_os]:
+				defaults_commands = commands_for_this_os[pref_os]['defaults']
 				for data in defaults_commands:
 					if 'arg_count' in data and data['arg_count'] > 0:
-						arg_parts = splitty[1].split(delimiter, data['arg_count'])
+						arg_parts = command_parts[1].split(delimiter, data['arg_count'])
 					if 'domain' in data:
 						domain = data['domain']
 					else:
@@ -1188,7 +1090,7 @@ def macosPref(args):
 						commands.append( [ '/usr/sbin/chown', user + ":" + str(group), path ] )
 					found = True
 	if not found:
-		not_found += "Can't find setting \"" + splitty[0] + "\" (your OS: " + get_short_os_version() + ")\n"
+		not_found += "Can't find setting \"" + command_parts[0] + "\" (your OS: " + get_short_os_version() + ")\n"
 
 	if len( not_found ) > 0:
 		usage( not_found, 'pref' )
@@ -1197,11 +1099,15 @@ def macosPref(args):
 		if not debug:
 			sh2( command )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['set_volume'] = {
+	'help':'set_volumeHelp',
+	'main':'set_volume',
+}
 
 def set_volumeHelp(name):
-	return '''
-Usage: %s set_volume <Volume> [<Output Volume>] [<Input Volume>]
+	return '''Usage: %s <options> set_volume <Volume> [<Output Volume>] [<Input Volume>]
 
 	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
 
@@ -1228,11 +1134,15 @@ def set_volume(args):
 			print "osascript -e 'set volume input volume args[2]'\n"
 		sh( "osascript -e 'set volume input volume "+args[2]+"'" )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['set_zone_ntp'] = {
+	'help':'set_zone_ntpHelp',
+	'main':'set_zone_ntp',
+}
 
 def set_zone_ntpHelp(name):
-	return '''
-Usage: %s set_zone_ntp <Zone> <ntp server>
+	return '''Usage: %s <options> set_zone_ntp <Zone> <ntp server>
 
 	Sets the timezone to <Zone> and the time server to <ntp server>.  For a list of
 	timezones look in /usr/share/zoneinfo.
@@ -1248,11 +1158,15 @@ def set_zone_ntp(args):
 	systemsetup( '-setnetworktimeserver', args[1] )
 	sh( 'ntpdate', '-u', args[1] )
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['shell_paths'] = {
+	'help':'shell_pathsHelp',
+	'main':'shell_paths',
+}
 
 def shell_pathsHelp(name):
-	return '''
-Usage: %s shell_paths <path> <name>
+	return '''Usage: %s <options> shell_paths <path> <name>
 
 	Adds the <path> to /private/etc/paths.d/<name>
 
@@ -1271,11 +1185,15 @@ def shell_paths(args):
 			file.write(search)
 			file.close()
 
-	######################################################################################
+##########################################################################################
+
+mak_commands['systemsetup'] = {
+	'help':'systemsetupHelp',
+	'main':'systemsetup',
+}
 
 def systemsetupHelp(name):
-	return '''
-Usage: %s systemsetup ...
+	return '''Usage: %s <options> systemsetup ...
 
 	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
 
@@ -1292,7 +1210,105 @@ Usage: %s systemsetup ...
 def systemsetup(args):
 	sh( '/usr/sbin/systemsetup ' + " ".join(args) )
 
-	######################################################################################
+##########################################################################################
+##########################################################################################
+##########################################################################################
+##########################################################################################
+
+def sh(cmd):
+	if debug:
+		print( cmd )
+		result = Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE).communicate()[0]
+		if result != '':
+			print( result )
+		return result
+	else:
+		return Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE).communicate()[0]
+
+def sh2(cmd):
+	if debug:
+		print( cmd )
+		result = Popen(cmd).communicate()[0]
+		if result != '':
+			print( result )
+		return result
+	else:
+		return Popen(cmd).communicate()[0]
+
+def get_os_version():
+	return sh("sw_vers -productVersion").rstrip('\n')
+
+def get_short_os_version():
+	return re.sub(r'(\d+\.\d+).*', r'\1', get_os_version())
+
+def find_os():
+	cur_os = get_short_os_version()
+	cur_ii = -1
+	ii = 0
+	for test_os in os_age:
+		if test_os == cur_os:
+			cur_ii = ii
+			break
+		ii += 1
+	return cur_ii
+
+def usage(e=None,help_command=None):
+	if e:
+		print e
+		print ""
+	name = os.path.basename(sys.argv[0])
+	text = ""
+	if help_command == None or help_command == 'help' or help_command == 'all':
+		text += '''Mac Army Knife.  Tool for system administrators to quickly and easily hack a Mac.
+                                                    ,^.
+                            /\\                     /   \\
+                ,^.        / /                    /    /
+                \\  \\      / /                    /    /
+                 \\\\ \\    / /                    /  ///
+                  \\\\ \\  / /                    /  ///
+                   \\  \\/_/____________________/    /
+                    `/                         \\  /_____________
+         __________/|  o    Mac Army Knife   o  |'              \\
+        |____________\\_________________________/_________________\\
+
+I'm combining all of my Mac customization scripts into this script.  All of this info is
+on the web scattered all over and a lot of this is just shortcuts to built-in commands.
+Why?  I'm tired of looking it up on the web and making scripts or profiles or whatever.  I
+just wanted a one stop shop as easy "System Preferences" but from the command line.
+
+https://github.com/magnusviri/mak.py
+
+Usage: %s [-d] [-o <os_ver>] command options
+
+	-d            Debug.
+	-o <os_ver>   When running this script on a computer with an OS different than the
+	              target volume, specify the target volume OS here.
+
+Commands
+''' % (name)
+		for mak_command, command_data in sorted( mak_commands.iteritems() ):
+			text += "\t" + mak_command + "\n"
+		text += '''
+For help
+	%s help <command name>
+	%s help all  # will display help for all commands
+''' % (name,name)
+	if help_command == 'all':
+		text += "\n------------------------------------------------------------------------------------------\n"
+		for mak_command, command_data in sorted( mak_commands.iteritems() ):
+			if 'help' in mak_commands[mak_command]:
+				text += "\n"+globals()[mak_commands[mak_command]['help']](name)
+				text += "------------------------------------------------------------------------------------------\n"
+	elif help_command != None:
+		text += globals()[mak_commands[help_command]['help']](name)
+	if False:
+		text = re.sub(r'<', r'&lt;', text)
+		text = re.sub(r'>', r'&gt;', text)
+	print( text )
+	if e:
+		sys.exit(64)
+	else:
+		sys.exit(0)
 
 def main():
 	if jamf:
@@ -1301,7 +1317,7 @@ def main():
 	else:
 		argv_start = 1
 	try:
-		(optargs, args) = getopt.getopt(sys.argv[argv_start:], "dh")
+		(optargs, args) = getopt.getopt(sys.argv[argv_start:], "do:")
 	except getopt.GetoptError, e:
 		print e
 		sys.exit(2)
@@ -1309,10 +1325,8 @@ def main():
 	for opt, arg in optargs:
 		if opt in ("-d"):
 			debug = True
-		elif opt in ("-h"):
-			usage()
-		elif opt in ("--help"):
-			usage()
+		elif opt in ("-o"):
+			target_os = arg
 	if len(args) <= 0:
 		usage()
 	command = args[0]
@@ -1321,30 +1335,11 @@ def main():
 			usage('', args[1])
 		else:
 			usage()
-	elif command == "ard":
-		ard(args[1:])
-	elif command == "disable_touristd":
-		disable_touristd(args[1:])
-	elif command == "hack_jamf_hooks":
-		hack_jamf_hooks(args[1:])
-	elif command == "locatedb":
-		locatedb(args[1:])
-	elif command == "launchdaemon":
-		launchdaemon(args[1:])
-	elif command == "networksetup":
-		networksetup(args[1:])
-	elif command == "pref":
-		macosPref(args[1:])
-	elif command == "set_volume":
-		set_volume(args[1:])
-	elif command == "set_zone_ntp":
-		set_zone_ntp(args[1:])
-	elif command == "shell_paths":
-		shell_paths(args[1:])
-	elif command == "systemsetup":
-		systemsetup(args[1:])
 	else:
-		usage('Unknown command: '+command)
+		if command in mak_commands and 'main' in mak_commands[command]:
+			globals()[mak_commands[command]['main']](args[1:])
+		else:
+			usage('Unknown command: '+command)
 
 if __name__ == '__main__':
 	main()
