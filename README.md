@@ -20,15 +20,19 @@ just wanted a one stop shop as easy "System Preferences" but from the command li
 
 https://github.com/magnusviri/mak.py
 
-Usage: mak.py command options
+Usage: mak.py [-d] [-o &lt;os_ver&gt;] command options
+
+	-d            Debug.
+	-o &lt;os_ver&gt;   When running this script on a computer with an OS different than the
+	              target volume, specify the target volume OS here.
 
 Commands
 	ard
 	disable_touristd
 	hack_jamf_hooks
 	help
-	locatedb
 	launchdaemon
+	locatedb
 	networksetup
 	pref
 	set_volume
@@ -42,7 +46,7 @@ For help
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py ard [-c] &lt;username[,username..]&gt; [setting[ setting..]]
+Usage: mak.py &lt;options&gt; ard [-c] &lt;username[,username..]&gt; [setting[ setting..]]
 
 	Configures ARD sharing for specific users and restarts the service.
 
@@ -69,7 +73,7 @@ Usage: mak.py ard [-c] &lt;username[,username..]&gt; [setting[ setting..]]
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py disable_touristd
+Usage: mak.py &lt;options&gt; disable_touristd
 
 	Disables all possible tourist dialogs for the current OS.  This uses the pref action
 	so see that for options (`mak.py help pref`)
@@ -80,19 +84,13 @@ Usage: mak.py disable_touristd
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py hack_jamf_hooks
+Usage: mak.py &lt;options&gt; hack_jamf_hooks
 
 	Changes loginhook.sh checkJSSConnection from 0 to 6 (this waits for a network connection before the jamf any login policies will run).
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py locatedb
-
-	Loads locate db
-
-------------------------------------------------------------------------------------------
-
-Usage: mak.py launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program arg&gt;..] ; &lt;key&gt; &lt;value&gt; [&lt;key&gt; &lt;value&gt;..]
+Usage: mak.py &lt;options&gt; launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program arg&gt;..] ; &lt;key&gt; &lt;value&gt; [&lt;key&gt; &lt;value&gt;..]
 
 	plist_file must be of form /path/label.plist
 
@@ -109,7 +107,13 @@ Usage: mak.py launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program a
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py networksetup ...
+Usage: mak.py &lt;options&gt; locatedb
+
+	Loads locate db
+
+------------------------------------------------------------------------------------------
+
+Usage: mak.py &lt;options&gt; networksetup ...
 
 	This is just a shortcut to /usr/sbin/networksetup.  See `man networksetup` for options.
 
@@ -201,7 +205,7 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
+Usage: mak.py &lt;options&gt; set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
 
 	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
 
@@ -212,7 +216,7 @@ Usage: mak.py set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volum
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py set_zone_ntp &lt;Zone&gt; &lt;ntp server&gt;
+Usage: mak.py &lt;options&gt; set_zone_ntp &lt;Zone&gt; &lt;ntp server&gt;
 
 	Sets the timezone to &lt;Zone&gt; and the time server to &lt;ntp server&gt;.  For a list of
 	timezones look in /usr/share/zoneinfo.
@@ -222,7 +226,7 @@ Usage: mak.py set_zone_ntp &lt;Zone&gt; &lt;ntp server&gt;
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py shell_paths &lt;path&gt; &lt;name&gt;
+Usage: mak.py &lt;options&gt; shell_paths &lt;path&gt; &lt;name&gt;
 
 	Adds the &lt;path&gt; to /private/etc/paths.d/&lt;name&gt;
 
@@ -231,7 +235,7 @@ Usage: mak.py shell_paths &lt;path&gt; &lt;name&gt;
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py systemsetup ...
+Usage: mak.py &lt;options&gt; systemsetup ...
 
 	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
 
