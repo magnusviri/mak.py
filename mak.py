@@ -798,7 +798,7 @@ For help
 	if command == 'systemsetup' or command == 'all':
 		text += systemsetupHelp(name)
 		text += "------------------------------------------------------------------------------------------\n"
-	if True:
+	if False:
 		text = re.sub(r'<', r'&lt;', text)
 		text = re.sub(r'>', r'&gt;', text)
 	print( text )
