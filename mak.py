@@ -880,7 +880,7 @@ def ard_userHelp(name):
 		%s ard_user -r admin,james               # Removes all access except users listed
 		%s ard_user -r admin -ChangeSettings
 
-''' % (name,name,name,name)
+''' % (name,name,name,name,name)
 
 def ard_user(args):
 	kickstart = '/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart';
