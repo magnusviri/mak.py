@@ -20,15 +20,16 @@ just wanted a one stop shop as easy "System Preferences" but from the command li
 
 https://github.com/magnusviri/mak.py
 
-Usage: mak.py [-d] [-o &lt;os_ver&gt;] command options
+Usage: mak.py [-dv] [-o &lt;os_ver&gt;] command options
 
-	-d            Debug.
+	-d            Debug (verbose + some things aren't executed)
 	-o &lt;os_ver&gt;   When running this script on a computer with an OS different than the
-	              target volume, specify the target volume OS here.
+	              target volume, specify the target volume OS here
+	-v            Verbose
+	--version     Print version and exit
 
 Commands
-	ard
-	disable_touristd
+	ard_user
 	hack_jamf_hooks
 	help
 	launchdaemon
@@ -36,7 +37,6 @@ Commands
 	networksetup
 	pref
 	set_volume
-	set_zone_ntp
 	shell_paths
 	systemsetup
 
@@ -46,13 +46,15 @@ For help
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py &lt;options&gt; ard [-c] &lt;username[,username..]&gt; [setting[ setting..]]
+Usage: mak.py &lt;options&gt; ard_user [-c] &lt;username[,username..]&gt; [setting[ setting..]]
 
-	Configures ARD sharing for specific users and restarts the service.
-
-	By default all priveledges are give.  Specify the specific priveledges to use less than all.
+	Configures ARD sharing for specific users (all users is turned off) and restarts the
+	service.
 
 	-r  Remove all previous ARD priveledges from all users
+
+	By default all priveledges are given.  Specify the specific priveledges to use less
+	than all.
 
 	Settings:
 		-ChangeSettings
@@ -67,26 +69,19 @@ Usage: mak.py &lt;options&gt; ard [-c] &lt;username[,username..]&gt; [setting[ s
 		-TextMessages
 
 	Examples:
-		mak.py ard admin
-		mak.py ard -r admin,james
-		mak.py ard -r admin -ChangeSettings
+		mak.py ard_user admin
+		mak.py ard_user -r                           # Removes all access
+		mak.py ard_user -r admin,james               # Removes all access except users listed
+		mak.py ard_user -r admin -ChangeSettings
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py &lt;options&gt; disable_touristd
+Usage: mak.py &lt;options&gt; hack_jamf_hooks [value]
 
-	Disables all possible tourist dialogs for the current OS.  This uses the pref action
-	so see that for options (`mak.py help pref`)
+	Changes loginhook.sh checkJSSConnection from 0 to either 6 (default) or what you specify.
+	This waits for a network connection before any jamf login policies will run.
 
-	Examples:
-		mak.py disable_touristd	        # disables tourist for current user
-		mak.py disable_touristd -T      # disables tourist in /System/Library/User Template/English.lproj
-
-------------------------------------------------------------------------------------------
-
-Usage: mak.py &lt;options&gt; hack_jamf_hooks
-
-	Changes loginhook.sh checkJSSConnection from 0 to 6 (this waits for a network connection before the jamf any login policies will run).
+	By default the startup script will check 12 times, and logout checks 1 time.
 
 ------------------------------------------------------------------------------------------
 
@@ -125,15 +120,18 @@ Usage: mak.py &lt;options&gt; networksetup ...
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
+Usage: mak.py pref [-dh|--help] [-o os] [-p path] [-u username] Preference.Name[=Option]
+
+	-o &lt;os&gt;         Disregard the booted OS and use the specified OS instead (e.g. 10.x)
 
 	The following options specify which file to modify when the default is in the user
 	level domain ("*.User.*")
 
-    -p &lt;path&gt;       Path to the user directory
+    -p &lt;path&gt;       Path to the preferences directory (used for user and computer prefs)
     -P &lt;path&gt;       Complete path to the plist file (all script path logic is skipped)
     -u &lt;username&gt;   For user defaults, use this username
-    -T              Use template: "/System/Library/User Template/English.lproj"
+    -T              Use template: "/System/Library/User Template/English.lproj" (username
+                    is "root", unless -u comes after the -T)
 
 	Supported settings:
 		Clock.User.ShowSeconds - user domain (10.11)
@@ -161,10 +159,10 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 		Finder.User.WarnOnEmptyTrash=&lt;true|false&gt; - Advanced tab: Show warning before emptying the Trash; 1 arg; user domain (10.12)
 		Finder.User._FXShowPosixPathInTitle=&lt;true|false&gt; - Shows full path in title; 1 arg; user domain (10.12)
 		Finder.User._FXSortFoldersFirst=&lt;true|false&gt; - Advanced tab: Keep Folders on top when sorting by name; 1 arg; user domain (10.12)
-		Gateway.Computer.GKAutoRearm=&lt;true|false&gt; - Turn off 30 day rearm ; 1 arg; user domain (10.11)
-		Generic.Computer=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic computer preference; 4 args; user domain
+		Gateway.Computer.GKAutoRearm=&lt;true|false&gt; - Turn off 30 day rearm ; 1 arg; (10.11)
+		Generic.Computer=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic computer preference; 4 args;
 		Generic.User=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic user preference; 4 args; user domain
-		Generic.User.ByHost=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic user byhost preference; 4 args; user domain
+		Generic.User.ByHost=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic user byhost preference; 4 args; user/byhost domain
 		KeyAccess.Computer.Server=&lt;url&gt; - ; 1 arg; computer domain (10.11)
 		Mouse.User.Click.Double - Configures mouse double click; user domain (10.11)
 		Mouse.User.Click.Single - Configures mouse single click; user domain (10.11)
@@ -194,11 +192,13 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 		SystemUIServer.User.AirplayVisibility=&lt;true|false&gt; - ; user domain (10.12)
 		SystemUIServer.User.DontAutoLoad=&lt;path of menu extra&gt; - ; user/byhost domain (10.11)
 		SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11)
-		Tourist.User.disable - Use the disable_touristd command, not the pref command ; user domain (any OS)
+		Time.Computer.Server - (10.11)
+		Time.Computer.Zone - (10.11)
+		Tourist.User.disable - Disables the blasted tourist thing; user domain (any OS)
 
 	Examples:
 		mak.py pref SoftwareUpdate.Computer.AutoUpdate=false
-		mak.py pref -p /Users/admin Clock.User.ShowSeconds
+		mak.py pref -o 10.12 -p /Users/admin Clock.User.ShowSeconds
 		mak.py pref -P /Users/admin/Library/Preferences/com.apple.menuextra.clock.plist Clock.User.ShowSeconds
 		mak.py pref -u admin Clock.User.ShowSeconds
 		mak.py pref -T Clock.User.ShowSeconds
@@ -207,22 +207,17 @@ Usage: mak.py pref [-dh|--help] [-p path] [-u username] Preference.Name[:Option]
 
 Usage: mak.py &lt;options&gt; set_volume &lt;Volume&gt; [&lt;Output Volume&gt;] [&lt;Input Volume&gt;]
 
-	Sets the volume.  0 is muted, 3.5 is half, and 7 is the max.
+	Sets the speaker and microphone levels.
+
+	&lt;Volume&gt; values are 0-7
+	&lt;Output Volume&gt; values are 0-100
+	&lt;Input Volume&gt; values are 0-100
+	Use "-" to skip
 
 	Examples:
-		mak.py set_volume 0     # Muted
-		mak.py set_volume 3.5   # Half
-		mak.py set_volume 7     # Max
-
-------------------------------------------------------------------------------------------
-
-Usage: mak.py &lt;options&gt; set_zone_ntp &lt;Zone&gt; &lt;ntp server&gt;
-
-	Sets the timezone to &lt;Zone&gt; and the time server to &lt;ntp server&gt;.  For a list of
-	timezones look in /usr/share/zoneinfo.
-
-	Examples:
-		mak.py set_zone_ntp America/Denver time.apple.com
+		mak.py set_volume 0         # Muted
+		mak.py set_volume 3.5 - 0   # Half, skip, microphone muted
+		mak.py set_volume - 0 100   # skip, speaker muted, microphone max
 
 ------------------------------------------------------------------------------------------
 
@@ -240,7 +235,7 @@ Usage: mak.py &lt;options&gt; systemsetup ...
 	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
 
 	Why?  Because I'll forget about systemsetup otherwise (it's not like I use the command
-	very much).
+	very much).  systemsetup modifies time, sleep, sharing, and startup disks
 
 	Examples:
 		mak.py systemsetup -settimezone America/Denver
