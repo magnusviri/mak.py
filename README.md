@@ -20,11 +20,9 @@ just wanted a one stop shop as easy "System Preferences" but from the command li
 
 https://github.com/magnusviri/mak.py
 
-Usage: mak.py [-dv] [-o &lt;os_ver&gt;] command options
+Usage: mak.py [-dv] command options
 
 	-d            Debug (verbose + some things aren't executed)
-	-o &lt;os_ver&gt;   When running this script on a computer with an OS different than the
-	              target volume, specify the target volume OS here
 	-v            Verbose
 	--version     Print version and exit
 
@@ -85,11 +83,11 @@ Usage: mak.py &lt;options&gt; hack_jamf_hooks [value]
 
 ------------------------------------------------------------------------------------------
 
-Usage: mak.py &lt;options&gt; launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program arg&gt;..] ; &lt;key&gt; &lt;value&gt; [&lt;key&gt; &lt;value&gt;..]
+Usage: mak.py &lt;options&gt; launchdaemon &lt;plist_file&gt; &lt;program arg&gt; [&lt;program arg&gt;..] [;|:] &lt;key&gt; &lt;value&gt; [&lt;key&gt; &lt;value&gt;..]
 
 	plist_file must be of form /path/label.plist
 
-	Array or dictionary items (like program arguments) must be terminated with ";" (don't forget to quote or escape it).
+	Array or dictionary items (like program arguments) must be terminated with ";" (don't forget to quote or escape it) or ":".
 
 	https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man5/launchd.plist.5.html
 	https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man5/plist.5.html
@@ -129,12 +127,18 @@ Usage: mak.py pref [-dh|--help] [-o os] [-p path] [-u username] Preference.Name[
 
     -p &lt;path&gt;       Path to the preferences directory (used for user and computer prefs)
     -P &lt;path&gt;       Complete path to the plist file (all script path logic is skipped)
-    -u &lt;username&gt;   For user defaults, use this username
+    -R              Use root: "/private/var/root/Library/Preferences/" (username is
+                    "root", unless a -u comes after the -T)
     -T              Use template: "/System/Library/User Template/English.lproj" (username
-                    is "root", unless -u comes after the -T)
+                    is "root", unless a -u comes after the -T)
+    -u &lt;username&gt;   For user defaults, use this username
 
 	Supported settings:
-		Clock.User.ShowSeconds - user domain (10.11)
+		ARD.Text1 - (10.14)
+		ARD.Text2 - (10.14)
+		ARD.Text3 - (10.14)
+		ARD.Text4 - (10.14)
+		Clock.User.ShowSeconds - user domain (10.14)
 		CrashReporter.User.Use_Notification_Center=&lt;1|0&gt; - ; 1 arg; user domain (10.11)
 		Dock.User.DisableAllAnimations=&lt;float&gt; - ; 1 arg; user domain (10.11)
 		Dock.User.autohide-delay=&lt;float&gt; - ; 1 arg; user domain (10.11)
@@ -164,11 +168,12 @@ Usage: mak.py pref [-dh|--help] [-o os] [-p path] [-u username] Preference.Name[
 		Generic.User=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic user preference; 4 args; user domain
 		Generic.User.ByHost=&lt;domain&gt;=&lt;key&gt;=&lt;format&gt;=&lt;value&gt; - Generic user byhost preference; 4 args; user/byhost domain
 		KeyAccess.Computer.Server=&lt;url&gt; - ; 1 arg; computer domain (10.11)
+		Loginwindow.User.DeleteRelaunchAtLogin - Removes the TALAppsToRelaunchAtLogin so that nothing relaunches at the next login; user domain (10.14)
 		Mouse.User.Click.Double - Configures mouse double click; user domain (10.11)
 		Mouse.User.Click.Single - Configures mouse single click; user domain (10.11)
-		Quicktime7.User.ProKey=1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.12)
-		Quicktime7.User.ProName=Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.12)
-		Quicktime7.User.ProOrg=Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.12)
+		Quicktime7.User.ProKey=1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.14)
+		Quicktime7.User.ProName=Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.14)
+		Quicktime7.User.ProOrg=Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.14)
 		Safari.User.HomePage=http://example.com - Set Safari's homepage; 1 arg; user domain (10.11)
 		Safari.User.LastSafariVersionWithWelcomePage=&lt;string&gt; - Gets rid of the Welcome to Safari message; 1 arg; user domain (10.11)
 		Safari.User.NewAndTabWindowBehavior=&lt;int&gt; - Sets what Safari shows in new tabs and windows; 1 arg; user domain (10.11)
@@ -183,12 +188,23 @@ Usage: mak.py pref [-dh|--help] [-o os] [-p path] [-u username] Preference.Name[
 		ScreenSaver.User.Computer_Name_Clock - Turns on Clock for Computer Name Module; user/byhost domain (10.11)
 		ScreenSaver.User.askForPassword=&lt;1|0&gt; - Set screensaver password; 1 arg: 0 off, 1 on; user domain (10.11)
 		Screencapture.User.disable-shadow=&lt;true|false&gt; - ; 1 arg; user domain (10.11)
-		SoftwareUpdate.Computer.AutoUpdate=&lt;true|false&gt; - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: 0 off, 1 on; (10.12)
-		SoftwareUpdate.Computer.AutoUpdateRestartRequired=&lt;true|false&gt; - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: 0 off, 1 on; (10.12)
-		SoftwareUpdate.Computer.AutomaticCheckEnabled=&lt;true|false&gt; - "Automatically check for updates"; 1 arg: 0 off, 1 on; (10.12)
-		SoftwareUpdate.Computer.AutomaticDownload=&lt;true|false&gt; - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: 0 off, 1 on; (10.12)
+		SetupAssistant.User.DidSeeAppearanceSetup=&lt;true|false&gt; - Hides login setup assistant; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeApplePaySetup=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeAvatarSetup=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeCloudSetup=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeePrivacy=&lt;true|false&gt; - Hides login setup assistant privacy question; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeSiriSetup=&lt;true|false&gt; - Hides login setup assistant Siri question; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeSyncSetup=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeSyncSetup2=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeTouchIDSetup=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeTrueTonePrivacy=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SetupAssistant.User.DidSeeiCloudLoginForStorageServices=&lt;true|false&gt; - ; 1 arg: true/false; user domain (10.14)
+		SoftwareUpdate.Computer.AutoUpdate=&lt;true|false&gt; - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)
+		SoftwareUpdate.Computer.AutoUpdateRestartRequired=&lt;true|false&gt; - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)
+		SoftwareUpdate.Computer.AutomaticCheckEnabled=&lt;true|false&gt; - "Automatically check for updates"; 1 arg: true/false; (10.12)
+		SoftwareUpdate.Computer.AutomaticDownload=&lt;true|false&gt; - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)
 		SoftwareUpdate.Computer.SetCatalogURL=&lt;http://example.com:8088/index.sucatalog&gt; - Sets the SoftwareUpdate CatalogURL, which must be a Mac OS X Server with the Software Update service activated; (10.12)
-		SoftwareUpdate.Computer.SystemSecurityUpdates=&lt;true|false&gt; - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: 0 off, 1 on; (10.12)
+		SoftwareUpdate.Computer.SystemSecurityUpdates=&lt;true|false&gt; - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)
 		SystemUIServer.User.AirplayVisibility=&lt;true|false&gt; - ; user domain (10.12)
 		SystemUIServer.User.DontAutoLoad=&lt;path of menu extra&gt; - ; user/byhost domain (10.11)
 		SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11)
