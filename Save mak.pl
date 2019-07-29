@@ -1452,7 +1452,7 @@ just wanted a one stop shop as easy "System Preferences" but from the command li
 
 https://github.com/magnusviri/mak.py
 
-Usage: %s [-dv] [-o <os_ver>] command options
+Usage: %s [-dv] command options
 
 	-d            Debug (verbose + some things aren't executed)
 	-v            Verbose
