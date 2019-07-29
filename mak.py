@@ -936,7 +936,6 @@ def pref(args):
 
 			# PlistBuddy
 			elif data['type'] == 'PlistBuddy':
-##############################
 				# defaults command type (write or delete)
 				command_type = 'Set'
 				if 'command' in data:
@@ -952,7 +951,6 @@ def pref(args):
 				# Add a chown if it's in the user homedir
 				if username != None:
 					chown_these_files[pref_path] = [ '/usr/sbin/chown', username + ':' + group, pref_path ]
-##############################
 
 			# Function
 			elif data['type'] == 'function':
@@ -1419,7 +1417,7 @@ just wanted a one stop shop as easy "System Preferences" but from the command li
 
 https://github.com/magnusviri/mak.py
 
-Usage: %s [-dv] [-o <os_ver>] command options
+Usage: %s [-dv] command options
 
 	-d            Debug (verbose + some things aren't executed)
 	-v            Verbose
