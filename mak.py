@@ -27,10 +27,9 @@ from subprocess import Popen, PIPE
 jamf = False
 debug = False
 verbose = False
-target_os = None
 mak_commands = {}
 
-version = '1.1.0'
+version = '1.1.3'
 
 ##########################################################################################
 
@@ -39,7 +38,7 @@ mak_commands['pref'] = {
 	'main':'pref',
 }
 
-os_age = [ '10.13', '10.12', '10.11', '10.10', '10.9', '10.8', '10.7', '10.6', '10.5', '10.4', '10.3', '10.2', '10.1', '10.0', '0' ]
+os_age = [ '10.14', '10.13', '10.12', '10.11', '10.10', '10.9', '10.8', '10.7', '10.6', '10.5', '10.4', '10.3', '10.2', '10.1', '10.0', '0' ]
 
 pref_delim = '='
 
@@ -53,9 +52,11 @@ def prefHelp(name):
 
     -p <path>       Path to the preferences directory (used for user and computer prefs)
     -P <path>       Complete path to the plist file (all script path logic is skipped)
-    -u <username>   For user defaults, use this username
+    -R              Use root: "/private/var/root/Library/Preferences/" (username is
+                    "root", unless a -u comes after the -T)
     -T              Use template: "/System/Library/User Template/English.lproj" (username
-                    is "root", unless -u comes after the -T)
+                    is "root", unless a -u comes after the -T)
+    -u <username>   For user defaults, use this username
 
 	Supported settings:
 ''' % (name, pref_delim)
@@ -75,14 +76,45 @@ def prefHelp(name):
 	return( text )
 
 prefs = {
+	########################
+	# Apple Remote Desktop #
+	########################
+	'ARD.Text1':{
+		'help':'ARD.Text1 - (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text1', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'ARD.Text2':{
+		'help':'ARD.Text2 - (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text2', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'ARD.Text3':{
+		'help':'ARD.Text3 - (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text3', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'ARD.Text4':{
+		'help':'ARD.Text4 - (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text4', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
 	#########
 	# Clock #
 	#########
 	'Clock.User.ShowSeconds':{
-		'help':'Clock.User.ShowSeconds - user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Clock.User.ShowSeconds - user domain (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
-		'10.11':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.menuextra.clock', 'args':['DateFormat', '-string', '\'EEE hh:mm:ss a\''], },
 		],
 	},
@@ -153,17 +185,17 @@ prefs = {
 	},
 	'Finder.User.ShowStatusBar':{
 		'help':'Finder.User.ShowStatusBar'+pref_delim+'<true|false> - View menu: Show Status Bar; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowStatusBar', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.ShowHardDrivesOnDesktop':{
 		'help':'Finder.User.ShowHardDrivesOnDesktop'+pref_delim+'<true|false> - General tab: Show Hard Drives On Desktop; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowHardDrivesOnDesktop', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
@@ -177,17 +209,17 @@ prefs = {
 	},
 	'Finder.User.ShowRemovableMediaOnDesktop':{
 		'help':'Finder.User.ShowRemovableMediaOnDesktop'+pref_delim+'<true|false> - General tab: Show Removable Media On Desktop; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'versions':{ '10.11':'10.14', '10.14':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowRemovableMediaOnDesktop', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.ShowMountedServersOnDesktop':{
 		'help':'Finder.User.ShowMountedServersOnDesktop'+pref_delim+'<true|false> - General tab: Show Mounted Servers On Desktop; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.143':'10.14', },
 		'user':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowMountedServersOnDesktop', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
@@ -278,9 +310,9 @@ prefs = {
 # 	<string>/Applications</string>
 	'Finder.User._FXShowPosixPathInTitle':{
 		'help':'Finder.User._FXShowPosixPathInTitle'+pref_delim+'<true|false> - Shows full path in title; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['_FXShowPosixPathInTitle', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
@@ -338,6 +370,17 @@ prefs = {
 			{ 'type':'defaults', 'domain':'com.sassafras.KeyAccess', 'args':['host', '%ARG0%'], 'arg_count':1, },
 		],
 	},
+	###############
+	# Loginwindow #
+	###############
+	'Loginwindow.User.DeleteRelaunchAtLogin':{
+		'help':'Loginwindow.User.DeleteRelaunchAtLogin - Removes the TALAppsToRelaunchAtLogin so that nothing relaunches at the next login; user domain (10.14)',
+		'byhost':True,
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
+		'10.12':[
+			{ 'type':'PlistBuddy', 'domain':'com.apple.loginwindow', 'command':'Delete', 'args':['TALAppsToRelaunchAtLogin'], },
+		],
+	},
 	#########
 	# Mouse #
 	#########
@@ -363,26 +406,26 @@ prefs = {
 	# QuickTime7 #
 	##############
 	'QuickTime7.User.ProName':{
-		'help':'Quicktime7.User.ProName'+pref_delim+'Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Quicktime7.User.ProName'+pref_delim+'Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.QuickTime', 'args':['Pro Key', '-dict-add', 'Name', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'QuickTime7.User.ProOrg':{
-		'help':'Quicktime7.User.ProOrg'+pref_delim+'Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Quicktime7.User.ProOrg'+pref_delim+'Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.QuickTime', 'args':['Pro Key', '-dict-add', 'Organization', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'QuickTime7.User.ProKey':{
-		'help':'Quicktime7.User.ProKey'+pref_delim+'1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Quicktime7.User.ProKey'+pref_delim+'1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
-		'10.12':[
+		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.QuickTime', 'args':['Pro Key', '-dict-add', 'Registration Key', '%ARG0%'], 'arg_count':1, },
 		],
 	},
@@ -509,6 +552,97 @@ prefs = {
 		],
 	},
 	##################
+	# SetupAssistant #
+	##################
+	'SetupAssistant.User.DidSeeAppearanceSetup':{
+		'help':'SetupAssistant.User.DidSeeAppearanceSetup'+pref_delim+'<true|false> - Hides login setup assistant; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeAppearanceSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeePrivacy':{
+		'help':'SetupAssistant.User.DidSeePrivacy'+pref_delim+'<true|false> - Hides login setup assistant privacy question; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeePrivacy', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeSiriSetup':{
+		'help':'SetupAssistant.User.DidSeeSiriSetup'+pref_delim+'<true|false> - Hides login setup assistant Siri question; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeSiriSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeApplePaySetup':{
+		'help':'SetupAssistant.User.DidSeeApplePaySetup'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeApplePaySetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeAvatarSetup':{
+		'help':'SetupAssistant.User.DidSeeAvatarSetup'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeAvatarSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeCloudSetup':{
+		'help':'SetupAssistant.User.DidSeeCloudSetup'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeCloudSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeiCloudLoginForStorageServices':{
+		'help':'SetupAssistant.User.DidSeeiCloudLoginForStorageServices'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeiCloudLoginForStorageServices', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeSyncSetup':{
+		'help':'SetupAssistant.User.DidSeeSyncSetup'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeSyncSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeSyncSetup2':{
+		'help':'SetupAssistant.User.DidSeeSyncSetup2'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeSyncSetup2', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeTouchIDSetup':{
+		'help':'SetupAssistant.User.DidSeeTouchIDSetup'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeTouchIDSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'SetupAssistant.User.DidSeeTrueTonePrivacy':{
+		'help':'SetupAssistant.User.DidSeeTrueTonePrivacy'+pref_delim+'<true|false> - ; 1 arg: true/false; user domain (10.14)',
+		'versions':{ '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeTrueTonePrivacy', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	##################
 	# SoftwareUpdate #
 	##################
 	'SoftwareUpdate.Computer.SetCatalogURL':{
@@ -520,35 +654,35 @@ prefs = {
 	},
 	# https://derflounder.wordpress.com/2014/12/29/managing-automatic-app-store-and-os-x-update-installation-on-yosemite/
 	'SoftwareUpdate.Computer.AutomaticCheckEnabled':{
-		'help':'SoftwareUpdate.Computer.AutomaticCheckEnabled'+pref_delim+'<true|false> - "Automatically check for updates"; 1 arg: 0 off, 1 on; (10.12)',
+		'help':'SoftwareUpdate.Computer.AutomaticCheckEnabled'+pref_delim+'<true|false> - "Automatically check for updates"; 1 arg: true/false; (10.12)',
 		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['AutomaticCheckEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutomaticDownload':{
-		'help':'SoftwareUpdate.Computer.AutomaticDownload'+pref_delim+'<true|false> - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: 0 off, 1 on; (10.12)',
+		'help':'SoftwareUpdate.Computer.AutomaticDownload'+pref_delim+'<true|false> - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)',
 		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['AutomaticDownload', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutoUpdate':{
-		'help':'SoftwareUpdate.Computer.AutoUpdate'+pref_delim+'<true|false> - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: 0 off, 1 on; (10.12)',
+		'help':'SoftwareUpdate.Computer.AutoUpdate'+pref_delim+'<true|false> - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)',
 		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.commerce', 'args':['AutoUpdate', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutoUpdateRestartRequired':{
-		'help':'SoftwareUpdate.Computer.AutoUpdateRestartRequired'+pref_delim+'<true|false> - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: 0 off, 1 on; (10.12)',
+		'help':'SoftwareUpdate.Computer.AutoUpdateRestartRequired'+pref_delim+'<true|false> - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)',
 		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.commerce', 'args':['AutoUpdateRestartRequired', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.SystemSecurityUpdates':{
-		'help':'SoftwareUpdate.Computer.SystemSecurityUpdates'+pref_delim+'<true|false> - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: 0 off, 1 on; (10.12)',
+		'help':'SoftwareUpdate.Computer.SystemSecurityUpdates'+pref_delim+'<true|false> - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)',
 		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['ConfigDataInstall', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -651,7 +785,7 @@ def get_usersname():
 		print 'Finding the logged in user'
 	return sh("/usr/bin/stat /dev/console | awk '{print $5}'").rstrip('\n')
 
-def get_pref_dir(user_dir, username, macUUID):
+def get_pref_dir(user_dir, username):
 	if username != None:
 		if user_dir == None:
 			try:
@@ -660,8 +794,6 @@ def get_pref_dir(user_dir, username, macUUID):
 				print "Could not find username: " + username
 				sys.exit(1)
 		pref_dir = user_dir + '/Library/Preferences/'
-		if macUUID != None:
-			pref_dir += 'ByHost/'
 		return pref_dir
 	else:
 		return '/Library/Preferences/'
@@ -678,7 +810,7 @@ def get_domain(data, command_parts):
 def get_macUUID():
 	if verbose:
 		print 'Finding the ByHost UUID'
-	return sh("ioreg -rd1 -c IOPlatformExpertDevice | grep -i 'UUID' | cut -c27-62").rstrip('\n')
+	return sh("/usr/sbin/ioreg -rd1 -c IOPlatformExpertDevice | grep -i 'UUID' | cut -c27-62").rstrip('\n')
 
 def pref(args):
 	pref_os = None
@@ -688,7 +820,7 @@ def pref(args):
 	pref_dir = None
 	macUUID = None
 	try:
-		(optargs, rargs) = getopt.getopt(args, 'o:p:P:u:T')
+		(optargs, rargs) = getopt.getopt(args, 'o:p:P:RTu:')
 	except getopt.GetoptError, e:
 		print e
 		sys.exit(2)
@@ -704,6 +836,9 @@ def pref(args):
 		elif opt == '-T':
 			user_dir = '/System/Library/User Template/English.lproj'
 			username = 'root'
+		elif opt == '-R':
+			user_dir = '/private/var/root'
+			username = 'root'
 	if len( rargs ) == 0:
 		usage('You must specify arguments', 'pref')
 	sys_args = rargs
@@ -712,7 +847,7 @@ def pref(args):
 	command_parts = rargs[0].split(pref_delim, 1)
 	command_name = command_parts[0]
 	if not command_name in prefs:
-		usage('Can\'t find setting "' + command_name, 'pref')
+		usage('Can\'t find setting "' + command_name + '"', 'pref')
 	command_prefs = prefs[command_name]
 
 	# Pre-run stuff
@@ -766,21 +901,24 @@ def pref(args):
 		command_args = substitute_arguments(data, command_parts, pref_os)
 		if 'type' in data:
 
-			# Defaults
-			if data['type'] == 'defaults':
-
+			# Path to file (if it's defaults or PlistBuddy)
+			if data['type'] == 'defaults' or data['type'] == 'PlistBuddy':
 				# Complete the path to the preferences
 				if force_path != None:
 					pref_path = force_path
 				else:
 					if pref_dir == None:
-						pref_dir = get_pref_dir(user_dir, username, macUUID)
+						pref_dir = get_pref_dir(user_dir, username)
+						if macUUID != None:
+							pref_dir += 'ByHost/'
 					domain = get_domain(data, command_parts)
-					if macUUID != None:
+					if macUUID != None: # ///////// on 10.14, when run as a user, this puts the macUUID twice
 						pref_path = pref_dir + domain + '.' + macUUID + '.plist'
 					else:
 						pref_path = pref_dir + domain + '.plist'
 
+			# Defaults
+			if data['type'] == 'defaults':
 				# defaults command type (write or delete)
 				command_type = 'write'
 				if 'command' in data:
@@ -793,8 +931,28 @@ def pref(args):
 				commands.append( command )
 
 				# Add a chown if it's in the user homedir
-				if username != None and command_type == 'write':
+				if username != None:
 					chown_these_files[pref_path] = [ '/usr/sbin/chown', username + ':' + group, pref_path ]
+
+			# PlistBuddy
+			elif data['type'] == 'PlistBuddy':
+##############################
+				# defaults command type (write or delete)
+				command_type = 'Set'
+				if 'command' in data:
+					command_type = data['command']
+
+				# The command
+				if command_args == None or len(command_args) > 1:
+					print 'Script error: PlistBuddy requires an argument.  Args: ' + '('+str(command_args)+').'
+					sys.exit(1)
+				command = [ '/usr/libexec/PlistBuddy', '-c', command_type+' '+command_args[0], pref_path ]
+				commands.append( command )
+
+				# Add a chown if it's in the user homedir
+				if username != None:
+					chown_these_files[pref_path] = [ '/usr/sbin/chown', username + ':' + group, pref_path ]
+##############################
 
 			# Function
 			elif data['type'] == 'function':
@@ -827,7 +985,7 @@ def pref(args):
 			sh2( command )
 
 def say(args):
-	sh("say " + ' '.join(args))
+	sh("/usr/bin/say " + ' '.join(args))
 
 ##########################################################################################
 
@@ -909,11 +1067,11 @@ def ard_user(args):
 	if clear:
 		if verbose:
 			print 'Removing all previous ARD priveledges from all users'
-		ard_users = sh( 'dscl . list /Users naprivs | awk \'{print $1}\'' )
+		ard_users = sh('/usr/bin/dscl . list /Users naprivs | awk \'{print $1}\'')
 		ard_users = ard_users.split("\n")
 		for user in ard_users:
 			if user != None and user != '':
-				sh( 'dscl . delete /Users/' + user + ' naprivs' )
+				sh( '/usr/bin/dscl . delete /Users/' + user + ' naprivs' )
 	sh( kickstart + ' -configure -allowAccessFor -specifiedUsers' )
 	if len(args) > 0:
 		sh( kickstart + ' -configure -access -on -privs ' + ' '.join(privs) + ' -users ' + args[0] )
@@ -942,10 +1100,10 @@ def hack_jamf_hooks(args):
 		try:
 			value = str(int(args[0]))
 		except getopt.GetoptError, e:
-			usage( 'I don\'t understand ' + args[0], 'hack_jamf_hooks' )
+			usage('I don\'t understand ' + args[0], 'hack_jamf_hooks')
 	elif len(args) > 1:
 		usage( 'I only understand one value.', 'hack_jamf_hooks' )
-	sh( 'sed -i .orig "s/checkJSSConnection -retry [0-9]* ;/checkJSSConnection -retry '+value+' ;/g" /Library/Application\ Support/JAMF/ManagementFrameworkScripts/loginhook.sh' )
+	sh('/usr/bin/sed -i .orig "s/checkJSSConnection -retry [0-9]* ;/checkJSSConnection -retry '+value+' ;/g" /Library/Application\ Support/JAMF/ManagementFrameworkScripts/loginhook.sh')
 
 ##########################################################################################
 
@@ -972,11 +1130,11 @@ mak_commands['launchdaemon'] = {
 }
 
 def launchdaemonHelp(name):
-	return '''Usage: %s <options> launchdaemon <plist_file> <program arg> [<program arg>..] ; <key> <value> [<key> <value>..]
+	return '''Usage: %s <options> launchdaemon <plist_file> <program arg> [<program arg>..] [;|:] <key> <value> [<key> <value>..]
 
 	plist_file must be of form /path/label.plist
 
-	Array or dictionary items (like program arguments) must be terminated with ";" (don't forget to quote or escape it).
+	Array or dictionary items (like program arguments) must be terminated with ";" (don't forget to quote or escape it) or ":".
 
 	https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man5/launchd.plist.5.html
 	https://developer.apple.com/legacy/library/documentation/Darwin/Reference/ManPages/man5/plist.5.html
@@ -1009,8 +1167,8 @@ def parseLaunchdPlist(args):
 		elif key1 in ['ProgramArguments', 'WatchPaths']:
 			if bucket == None:
 				bucket = []
-			if arg == ';':
-				hash[key1] = bucket;
+			if arg == ';' or arg == ':':
+				hash[key1] = bucket
 				key1 = None
 				bucket = None
 			else:
@@ -1019,8 +1177,8 @@ def parseLaunchdPlist(args):
 		elif key1 in ['StartCalendarInterval']:
 			if bucket == None:
 				bucket = {}
-			if arg == ';':
-				hash[key1] = bucket;
+			if arg == ';' or arg == ':':
+				hash[key1] = bucket
 				key1 = None
 				key2 = None
 				bucket = None
@@ -1032,17 +1190,17 @@ def parseLaunchdPlist(args):
 					key2 = None
 		elif key1 == 'KeepAlive':
 			if arg == '0':
-				hash[key1] = False;
+				hash[key1] = False
 				key1 = None
 			elif arg == '1':
-				hash[key1] = True;
+				hash[key1] = True
 				key1 = None
 			else:
 				usage( 'KeepAlive Dictionary is not done.', 'launchdaemon' )
 		else:
 			usage( 'Unknown key: '+key1, 'launchdaemon' )
 	if bucket != None and len(bucket) > 0:
-		usage( 'Terminate multi-item values with ";" (don\'t forget to escape it).', 'launchdaemon' )
+		usage('Terminate multi-item values with ";" (don\'t forget to escape it) or ":".', 'launchdaemon')
 	return hash
 
 def launchdaemon(args):
@@ -1060,9 +1218,9 @@ def launchdaemon(args):
 	ii = 1
 	while flag:
 		if ii >= len(args):
-			usage( 'You must terminate ProgramArguments items with ";" (don\'t forget to escape it).', 'launchdaemon' )
-		if args[ii] != ';':
-			if args[ii][-1] == ';':
+			usage('You must terminate ProgramArguments items with ";" (don\'t forget to escape it) or ":".', 'launchdaemon')
+		if args[ii] != ';' and args[ii] != ':':
+			if args[ii][-1] == ';' or args[ii][-1] == ':':
 				args[ii] = args[ii][:-1]
 				flag = False
 			program_args.append( args[ii] )
@@ -1074,12 +1232,12 @@ def launchdaemon(args):
 		print( program_args )
 		print( args )
 	if os.path.exists( path ):
-		sh( 'launchctl unload ' + path )
+		sh( '/bin/launchct unload ' + path )
 	plist = parseLaunchdPlist(args)
 	plist['Label'] = label
 	plist['ProgramArguments'] = program_args
 	plistlib.writePlist( plist, path )
-	sh( 'launchctl load ' + path )
+	sh( '/bin/launchct load ' + path )
 
 ##########################################################################################
 
@@ -1141,7 +1299,7 @@ def set_volume(args):
 	for ii, bla in enumerate([['',7], ['output volume ',100], ['input volume ',100]]):
 		if len(args) > ii and args[ii] != '-':
 			if is_text_number_between(args[ii], 0, bla[1]):
-				sh( "osascript -e 'set volume "+bla[0]+args[ii]+"'" )
+				sh( "/usr/bin/osascript -e 'set volume "+bla[0]+args[ii]+"'" )
 			else:
 				usage( args[ii]+' is not between 0 and '+str(bla[1]), 'set_volume' )
 
@@ -1230,7 +1388,7 @@ def sh2(cmd):
 		return Popen(cmd).communicate()[0]
 
 def get_os_version():
-	return sh('sw_vers -productVersion').rstrip('\n')
+	return sh('/usr/bin/sw_vers -productVersion').rstrip('\n')
 
 def get_short_os_version():
 	return re.sub(r'(\d+\.\d+).*', r'\1', get_os_version())
@@ -1264,8 +1422,6 @@ https://github.com/magnusviri/mak.py
 Usage: %s [-dv] [-o <os_ver>] command options
 
 	-d            Debug (verbose + some things aren't executed)
-	-o <os_ver>   When running this script on a computer with an OS different than the
-	              target volume, specify the target volume OS here
 	-v            Verbose
 	--version     Print version and exit
 
@@ -1287,7 +1443,10 @@ For help
 				text += "\n"+globals()[mak_commands[mak_command]['help']](name)
 				text += "------------------------------------------------------------------------------------------\n"
 	elif help_command != None:
-		text += globals()[mak_commands[help_command]['help']](name)
+		if help_command in mak_commands:
+			text += globals()[mak_commands[help_command]['help']](name)
+		else:
+			usage("Unknown command name: " + help_command)
 	if False:
 		text = re.sub(r'<', r'&lt;', text)
 		text = re.sub(r'>', r'&gt;', text)
@@ -1312,8 +1471,6 @@ def main():
 	for opt, arg in optargs:
 		if opt == '-d':
 			debug = True
-		elif opt == '-o':
-			target_os = arg
 		elif opt == '-v':
 			verbose = True
 		elif opt == '--version':
