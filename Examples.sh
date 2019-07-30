@@ -23,8 +23,8 @@
 /usr/local/bin/mak.py pref -T SetupAssistant.User.DidSeePrivacy=true
 /usr/local/bin/mak.py pref -T SetupAssistant.User.DidSeeSiriSetup=true
 /usr/local/bin/mak.py pref -T SoftwareUpdate.Computer.AutomaticCheckEnabled=false
-/usr/local/bin/mak.py pref -T SystemUIServer.User.DontAutoLoad="/System/Library/CoreServices/Menu Extras/AirPort.menu"
 /usr/local/bin/mak.py pref -T SystemUIServer.User.DontAutoLoadReset
+/usr/local/bin/mak.py pref -T SystemUIServer.User.DontAutoLoad="/System/Library/CoreServices/Menu Extras/AirPort.menu"
 /usr/local/bin/mak.py pref -T Tourist.User.disable
 
 # Other Pref Examples
