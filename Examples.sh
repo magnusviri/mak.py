@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# This is how I use mak.py
+
 # Template Pref Examples
 
 /usr/local/bin/mak.py pref -T Clock.User.ShowSeconds
@@ -17,6 +19,9 @@
 /usr/local/bin/mak.py pref -T "ScreenSaver.User.Basic.Message=School of Biological Sciences\nRestart to reset"
 /usr/local/bin/mak.py pref -T ScreenSaver.User.Computer_Name
 /usr/local/bin/mak.py pref -T ScreenSaver.User.Computer_Name_Clock
+/usr/local/bin/mak.py pref -T SetupAssistant.User.DidSeeAppearanceSetup=true
+/usr/local/bin/mak.py pref -T SetupAssistant.User.DidSeePrivacy=true
+/usr/local/bin/mak.py pref -T SetupAssistant.User.DidSeeSiriSetup=true
 /usr/local/bin/mak.py pref -T SoftwareUpdate.Computer.AutomaticCheckEnabled=false
 /usr/local/bin/mak.py pref -T SystemUIServer.User.DontAutoLoad="/System/Library/CoreServices/Menu Extras/AirPort.menu"
 /usr/local/bin/mak.py pref -T SystemUIServer.User.DontAutoLoadReset
