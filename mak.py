@@ -24,12 +24,13 @@ import pwd
 import re
 import sys
 from subprocess import Popen, PIPE
+from shutil import copyfile
 jamf = False
 debug = False
 verbose = False
 mak_commands = {}
 
-version = '1.1.3'
+version = '1.1.4'
 
 ##########################################################################################
 
@@ -80,28 +81,28 @@ prefs = {
 	# Apple Remote Desktop #
 	########################
 	'ARD.Text1':{
-		'help':'ARD.Text1 - (10.14)',
+		'help':'ARD.Text1 - (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text1', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ARD.Text2':{
-		'help':'ARD.Text2 - (10.14)',
+		'help':'ARD.Text2 - (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text2', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ARD.Text3':{
-		'help':'ARD.Text3 - (10.14)',
+		'help':'ARD.Text3 - (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text3', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ARD.Text4':{
-		'help':'ARD.Text4 - (10.14)',
+		'help':'ARD.Text4 - (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text4', '-string', '%ARG0%'], 'arg_count':1, },
@@ -111,7 +112,7 @@ prefs = {
 	# Clock #
 	#########
 	'Clock.User.ShowSeconds':{
-		'help':'Clock.User.ShowSeconds - user domain (10.14)',
+		'help':'Clock.User.ShowSeconds - user domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
@@ -122,8 +123,8 @@ prefs = {
 	# CrashReporter #
 	#################
 	'CrashReporter.User.Use_Notification_Center':{
-		'help':'CrashReporter.User.Use_Notification_Center=<1|0> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'CrashReporter.User.Use_Notification_Center=<1|0> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.CrashReporter', 'args':['UseUNC', '%ARG0%'], 'arg_count':1, },
@@ -133,32 +134,32 @@ prefs = {
 	# Dock #
 	########
 	'Dock.User.launchanim':{
-		'help':'Dock.User.launchanim'+pref_delim+'<true|false> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Dock.User.launchanim'+pref_delim+'<true|false> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['launchanim', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.expose-animation-duration':{
-		'help':'Dock.User.expose-animation-duration'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Dock.User.expose-animation-duration'+pref_delim+'<float> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['expose-animation-duration', '-float', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.autohide-delay':{
-		'help':'Dock.User.autohide-delay'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Dock.User.autohide-delay'+pref_delim+'<float> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['autohide-delay', '-float', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.DisableAllAnimations':{
-		'help':'Dock.User.DisableAllAnimations'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Dock.User.DisableAllAnimations'+pref_delim+'<float> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['DisableAllAnimations', '-float', '%ARG0%'], 'arg_count':1, },
@@ -168,23 +169,23 @@ prefs = {
 	# Finder #
 	##########
 	'Finder.User.ShowTabView':{
-		'help':'Finder.User.ShowTabView'+pref_delim+'<true|false> - View menu: Show Tab View; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.ShowTabView'+pref_delim+'<true|false> - View menu: Show Tab View; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowTabView', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.ShowPathbar':{
-		'help':'Finder.User.ShowPathbar'+pref_delim+'<true|false> - View menu: Show Pathbar; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.ShowPathbar'+pref_delim+'<true|false> - View menu: Show Pathbar; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowPathbar', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.ShowStatusBar':{
-		'help':'Finder.User.ShowStatusBar'+pref_delim+'<true|false> - View menu: Show Status Bar; 1 arg; user domain (10.12)',
+		'help':'Finder.User.ShowStatusBar'+pref_delim+'<true|false> - View menu: Show Status Bar; 1 arg; user domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
@@ -192,7 +193,7 @@ prefs = {
 		],
 	},
 	'Finder.User.ShowHardDrivesOnDesktop':{
-		'help':'Finder.User.ShowHardDrivesOnDesktop'+pref_delim+'<true|false> - General tab: Show Hard Drives On Desktop; 1 arg; user domain (10.12)',
+		'help':'Finder.User.ShowHardDrivesOnDesktop'+pref_delim+'<true|false> - General tab: Show Hard Drives On Desktop; 1 arg; user domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
@@ -200,15 +201,15 @@ prefs = {
 		],
 	},
 	'Finder.User.ShowExternalHardDrivesOnDesktop':{
-		'help':'Finder.User.ShowExternalHardDrivesOnDesktop'+pref_delim+'<true|false> - General tab: Show External Hard Drives On Desktop; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.ShowExternalHardDrivesOnDesktop'+pref_delim+'<true|false> - General tab: Show External Hard Drives On Desktop; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowExternalHardDrivesOnDesktop', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.ShowRemovableMediaOnDesktop':{
-		'help':'Finder.User.ShowRemovableMediaOnDesktop'+pref_delim+'<true|false> - General tab: Show Removable Media On Desktop; 1 arg; user domain (10.12)',
+		'help':'Finder.User.ShowRemovableMediaOnDesktop'+pref_delim+'<true|false> - General tab: Show Removable Media On Desktop; 1 arg; user domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.14':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
@@ -216,88 +217,88 @@ prefs = {
 		],
 	},
 	'Finder.User.ShowMountedServersOnDesktop':{
-		'help':'Finder.User.ShowMountedServersOnDesktop'+pref_delim+'<true|false> - General tab: Show Mounted Servers On Desktop; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.143':'10.14', },
+		'help':'Finder.User.ShowMountedServersOnDesktop'+pref_delim+'<true|false> - General tab: Show Mounted Servers On Desktop; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowMountedServersOnDesktop', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.NewWindowTarget':{
-		'help':'Finder.User.NewWindowTarget'+pref_delim+'<PfCm|PfVo|PfHm|PfDe|PfDo|PfID|PfAF|PfLo> - General tab: New Finder windows shows: PfCm - computer, PfVo - volume, PfHm - Home, PfDe - Desktop, PfDo - Documents, PfID - iCloud, PfAF - All Files, PfLo - Other; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.NewWindowTarget'+pref_delim+'<PfCm|PfVo|PfHm|PfDe|PfDo|PfID|PfAF|PfLo> - General tab: New Finder windows shows: PfCm - computer, PfVo - volume, PfHm - Home, PfDe - Desktop, PfDo - Documents, PfID - iCloud, PfAF - All Files, PfLo - Other; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['NewWindowTarget', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.NewWindowTargetPath':{
-		'help':'Finder.User.NewWindowTargetPath'+pref_delim+'<file:///...> - General tab: New Finder windows shows: PfCm - empty string, PfVo - /, PfHm - /Users/name/, PfDe - /Users/name/Desktop/, PfDo - /Users/name/Documents/, PfID - /Users/name/Library/Mobile%20Documents/com~apple~CloudDocs/, PfAF - /System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch, Other - Anything; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.NewWindowTargetPath'+pref_delim+'<file:///...> - General tab: New Finder windows shows: PfCm - empty string, PfVo - /, PfHm - /Users/name/, PfDe - /Users/name/Desktop/, PfDo - /Users/name/Documents/, PfID - /Users/name/Library/Mobile%20Documents/com~apple~CloudDocs/, PfAF - /System/Library/CoreServices/Finder.app/Contents/Resources/MyLibraries/myDocuments.cannedSearch, Other - Anything; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['NewWindowTargetPath', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.FinderSpawnTab':{
-		'help':'Finder.User.FinderSpawnTab'+pref_delim+'<true|false> - General tab: Open folders in tabs intead of new windows; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.FinderSpawnTab'+pref_delim+'<true|false> - General tab: Open folders in tabs intead of new windows; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['FinderSpawnTab', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.AppleShowAllExtensions':{
-		'help':'Finder.User.AppleShowAllExtensions'+pref_delim+'<true|false> - Advanced tab: Show all filename extensions; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.AppleShowAllExtensions'+pref_delim+'<true|false> - Advanced tab: Show all filename extensions; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['AppleShowAllExtensions', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.FXEnableExtensionChangeWarning':{
-		'help':'Finder.User.FXEnableExtensionChangeWarning'+pref_delim+'<true|false> - Advanced tab: Show warning before changing an extension; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.FXEnableExtensionChangeWarning'+pref_delim+'<true|false> - Advanced tab: Show warning before changing an extension; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['FXEnableExtensionChangeWarning', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.FXEnableRemoveFromICloudDriveWarning':{
-		'help':'Finder.User.FXEnableRemoveFromICloudDriveWarning'+pref_delim+'<true|false> - Advanced tab: Show warning before removing from iCloud Drive; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.FXEnableRemoveFromICloudDriveWarning'+pref_delim+'<true|false> - Advanced tab: Show warning before removing from iCloud Drive; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['FXEnableRemoveFromICloudDriveWarning', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.WarnOnEmptyTrash':{
-		'help':'Finder.User.WarnOnEmptyTrash'+pref_delim+'<true|false> - Advanced tab: Show warning before emptying the Trash; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.WarnOnEmptyTrash'+pref_delim+'<true|false> - Advanced tab: Show warning before emptying the Trash; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['WarnOnEmptyTrash', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.FXRemoveOldTrashItems':{
-		'help':'Finder.User.FXRemoveOldTrashItems'+pref_delim+'<true|false> - Advanced tab: Remove items from the Trash after 30 days; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.FXRemoveOldTrashItems'+pref_delim+'<true|false> - Advanced tab: Remove items from the Trash after 30 days; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['FXRemoveOldTrashItems', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User._FXSortFoldersFirst':{
-		'help':'Finder.User._FXSortFoldersFirst'+pref_delim+'<true|false> - Advanced tab: Keep Folders on top when sorting by name; 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User._FXSortFoldersFirst'+pref_delim+'<true|false> - Advanced tab: Keep Folders on top when sorting by name; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['_FXSortFoldersFirst', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Finder.User.FXDefaultSearchScope':{
-		'help':'Finder.User.FXDefaultSearchScope'+pref_delim+'<SCev|SCcf|SCsp> - Where to search, computer (SCev), current folder (SCcf), or previous scope (SCsp); 1 arg; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Finder.User.FXDefaultSearchScope'+pref_delim+'<SCev|SCcf|SCsp> - Where to search, computer (SCev), current folder (SCcf), or previous scope (SCsp); 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['FXDefaultSearchScope', '%ARG0%'], 'arg_count':1, },
@@ -309,7 +310,7 @@ prefs = {
 # 	<key>NSNavLastRootDirectory</key>
 # 	<string>/Applications</string>
 	'Finder.User._FXShowPosixPathInTitle':{
-		'help':'Finder.User._FXShowPosixPathInTitle'+pref_delim+'<true|false> - Shows full path in title; 1 arg; user domain (10.12)',
+		'help':'Finder.User._FXShowPosixPathInTitle'+pref_delim+'<true|false> - Shows full path in title; 1 arg; user domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'user':True,
 		'10.14':[
@@ -317,8 +318,8 @@ prefs = {
 		],
 	},
 	'Finder.User.DisableAllAnimations':{
-		'help':'Finder.User.DisableAllAnimations'+pref_delim+'<true|false> - Disable animation when opening the Info window in Finder; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Finder.User.DisableAllAnimations'+pref_delim+'<true|false> - Disable animation when opening the Info window in Finder; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['DisableAllAnimations', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -328,8 +329,8 @@ prefs = {
 	# Gatekeeper #
 	##############
 	'Gateway.Computer.GKAutoRearm':{ # https://www.cnet.com/how-to/how-to-disable-gatekeeper-permanently-on-os-x/
-		'help':'Gateway.Computer.GKAutoRearm'+pref_delim+'<true|false> - Turn off 30 day rearm ; 1 arg; (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Gateway.Computer.GKAutoRearm'+pref_delim+'<true|false> - Turn off 30 day rearm ; 1 arg; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.security', 'args':['GKAutoRearm', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -339,14 +340,14 @@ prefs = {
 	#################
 	'Generic.Computer':{
 		'help':'Generic.Computer'+pref_delim+'<domain>'+pref_delim+'<key>'+pref_delim+'<format>'+pref_delim+'<value> - Generic computer preference; 4 args;',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'args':['%ARG1%', '%ARG2%', '%ARG3%'], 'arg_count':4, }, # ARG0 is the domain
 		],
 	},
 	'Generic.User':{
 		'help':'Generic.User'+pref_delim+'<domain>'+pref_delim+'<key>'+pref_delim+'<format>'+pref_delim+'<value> - Generic user preference; 4 args; user domain',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'args':['%ARG1%', '%ARG2%', '%ARG3%'], 'arg_count':4, }, # ARG0 is the domain
@@ -354,7 +355,7 @@ prefs = {
 	},
 	'Generic.User.ByHost':{
 		'help':'Generic.User.ByHost'+pref_delim+'<domain>'+pref_delim+'<key>'+pref_delim+'<format>'+pref_delim+'<value> - Generic user byhost preference; 4 args; user/byhost domain',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'args':['%ARG1%', '%ARG2%', '%ARG3%'], 'arg_count':4, }, # ARG0 is the domain
@@ -364,8 +365,8 @@ prefs = {
 	# KeyAccess #
 	#############
 	'KeyAccess.Computer.Server':{
-		'help':'KeyAccess.Computer.Server'+pref_delim+'<url> - ; 1 arg; computer domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'KeyAccess.Computer.Server'+pref_delim+'<url> - ; 1 arg; computer domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.sassafras.KeyAccess', 'args':['host', '%ARG0%'], 'arg_count':1, },
 		],
@@ -373,20 +374,82 @@ prefs = {
 	###############
 	# Loginwindow #
 	###############
+	'Loginwindow.Computer.autoLoginUserScreenLocked':{
+		'help':'Loginwindow.Computer.autoLoginUserScreenLocked'+pref_delim+'<true|false> - autoLoginUserScreenLocked. (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.14':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.loginwindow', 'args':['autoLoginUserScreenLocked', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Loginwindow.Computer.DisableScreenLockImmediate':{
+		'help':'Loginwindow.Computer.DisableScreenLockImmediate'+pref_delim+'<true|false> - Gets rid of the Lock Screen option in the Apple Menu. (10.13-10.14)',
+		'versions':{ '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.loginwindow', 'args':['DisableScreenLockImmediate', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Loginwindow.Computer.GuestEnabled':{
+		'help':'Loginwindow.Computer.GuestEnabled'+pref_delim+'<true|false> - Enable/disable Guest user. (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.14':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.loginwindow', 'args':['GuestEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Loginwindow.Computer.Hide500Users':{
+		'help':'Loginwindow.Computer.Hide500Users'+pref_delim+'<true|false> - Hide uid 500 users. (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.14':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.loginwindow', 'args':['Hide500Users', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
 	'Loginwindow.User.DeleteRelaunchAtLogin':{
-		'help':'Loginwindow.User.DeleteRelaunchAtLogin - Removes the TALAppsToRelaunchAtLogin so that nothing relaunches at the next login; user domain (10.14)',
+		'help':'Loginwindow.User.DeleteRelaunchAtLogin - Removes the TALAppsToRelaunchAtLogin so that nothing relaunches at the next login; user domain (10.11-10.14)',
 		'byhost':True,
 		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'10.12':[
 			{ 'type':'PlistBuddy', 'domain':'com.apple.loginwindow', 'command':'Delete', 'args':['TALAppsToRelaunchAtLogin'], },
 		],
 	},
+	#############
+	# Microsoft #
+	#############
+	# https://docs.microsoft.com/en-us/office365/enterprise/network-requests-in-office-2016-for-mac
+	'Microsoft.Computer.AcknowledgeDataCollectionPolicy':{
+		'help':'Microsoft.Computer.AcknowledgeDataCollectionPolicy - Sets AcknowledgedDataCollectionPolicy so that it doesn\'t show the annoying dialog (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2', 'args':['AcknowledgedDataCollectionPolicy', 'RequiredDataOnly'], },
+		],
+	},
+	'Microsoft.User.AutoUpdateHowToCheck':{
+		'help':'Microsoft.User.AutoUpdateHowToCheck'+pref_delim+'Value - Sets AutoUpdate check method; Values are Manual, AutomaticCheck, and AutomaticDownload (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2', 'args':['HowToCheck', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Microsoft.User.SendAllTelemetryEnabled':{
+		'help':'Microsoft.User.SendAllTelemetryEnabled'+pref_delim+'<true|false> - Sets SendAllTelemetryEnabled (10.11-10.14)',
+		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
+		'user':True,
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.microsoft.Word', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.Excel', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.Powerpoint', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.Outlook', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.onenote.mac', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2.fba', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'defaults', 'domain':'com.microsoft.Office365ServiceV2', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
 	#########
 	# Mouse #
 	#########
 	'Mouse.User.Click.Double':{
-		'help':'Mouse.User.Click.Double - Configures mouse double click; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Mouse.User.Click.Double - Configures mouse double click; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleHIDMouse', 'args':['Button2', '-int', '2'], },
@@ -394,8 +457,8 @@ prefs = {
 		],
 	},
 	'Mouse.User.Click.Single':{
-		'help':'Mouse.User.Click.Single - Configures mouse single click; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Mouse.User.Click.Single - Configures mouse single click; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleHIDMouse', 'args':['Button2', '-int', '1'], },
@@ -406,7 +469,7 @@ prefs = {
 	# QuickTime7 #
 	##############
 	'QuickTime7.User.ProName':{
-		'help':'Quicktime7.User.ProName'+pref_delim+'Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.14)',
+		'help':'Quicktime7.User.ProName'+pref_delim+'Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
 		'10.14':[
@@ -414,7 +477,7 @@ prefs = {
 		],
 	},
 	'QuickTime7.User.ProOrg':{
-		'help':'Quicktime7.User.ProOrg'+pref_delim+'Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.14)',
+		'help':'Quicktime7.User.ProOrg'+pref_delim+'Organization - Set QuickTime 7 Pro Organization; 1 arg; user/byhost domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
 		'10.14':[
@@ -422,7 +485,7 @@ prefs = {
 		],
 	},
 	'QuickTime7.User.ProKey':{
-		'help':'Quicktime7.User.ProKey'+pref_delim+'1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.14)',
+		'help':'Quicktime7.User.ProKey'+pref_delim+'1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.11-10.14)',
 		'versions':{ '10.11':'10.14', '10.12':'10.14', '10.13':'10.14', '10.14':'10.14', },
 		'byhost':True,
 		'10.14':[
@@ -433,32 +496,32 @@ prefs = {
 	# Safari #
 	##########
 	'Safari.User.HomePage':{
-		'help':'Safari.User.HomePage'+pref_delim+'http://example.com - Set Safari\'s homepage; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.HomePage'+pref_delim+'http://example.com - Set Safari\'s homepage; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['HomePage', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Safari.User.NewTabBehavior':{
-		'help':'Safari.User.NewTabBehavior'+pref_delim+'<int> - Sets what Safari shows in new tabs; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.NewTabBehavior'+pref_delim+'<int> - Sets what Safari shows in new tabs; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['NewTabBehavior', '-int', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Safari.User.NewWindowBehavior':{
-		'help':'Safari.User.NewWindowBehavior'+pref_delim+'<int> - Sets what Safari shows in new windows; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.NewWindowBehavior'+pref_delim+'<int> - Sets what Safari shows in new windows; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['NewWindowBehavior', '-int', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Safari.User.NewTabAndWindowBehavior':{
-		'help':'Safari.User.NewAndTabWindowBehavior'+pref_delim+'<int> - Sets what Safari shows in new tabs and windows; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.NewAndTabWindowBehavior'+pref_delim+'<int> - Sets what Safari shows in new tabs and windows; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['NewWindowBehavior', '-int', '%ARG0%'], 'arg_count':1, },
@@ -466,8 +529,8 @@ prefs = {
 		],
 	},
 	'Safari.User.Show_Tabs_Status_Favorites':{
-		'help':'Safari.User.Show_Tabs_Status_Favorites'+pref_delim+'<true|false> - Turns on or off Tab, Status, and Favorites bar; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.Show_Tabs_Status_Favorites'+pref_delim+'<true|false> - Turns on or off Tab, Status, and Favorites bar; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['AlwaysShowTabBar', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -476,16 +539,16 @@ prefs = {
 		],
 	},
 	'Safari.User.LastSafariVersionWithWelcomePage':{
-		'help':'Safari.User.LastSafariVersionWithWelcomePage'+pref_delim+'<string> - Gets rid of the Welcome to Safari message; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.LastSafariVersionWithWelcomePage'+pref_delim+'<string> - Gets rid of the Welcome to Safari message; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['LastSafariVersionWithWelcomePage-v2', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Safari.User.WebKitInitialTimedLayoutDelay':{
-		'help':'Safari.User.WebKitInitialTimedLayoutDelay'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Safari.User.WebKitInitialTimedLayoutDelay'+pref_delim+'<float> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['WebKitInitialTimedLayoutDelay', '-float', '%ARG0%'], 'arg_count':1, },
@@ -495,8 +558,8 @@ prefs = {
 	# Screencapture #
 	#################
 	'Screencapture.User.disable-shadow':{
-		'help':'Screencapture.User.disable-shadow'+pref_delim+'<true|false> - ; 1 arg; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'Screencapture.User.disable-shadow'+pref_delim+'<true|false> - ; 1 arg; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screencapture', 'args':['disable-shadow', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -506,46 +569,46 @@ prefs = {
 	# ScreenSaver #
 	###############
 	'ScreenSaver.Computer.Basic.Message':{
-		'help':'ScreenSaver.Computer.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; computer domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.Computer.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; computer domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.ScreenSaver.Basic', 'args':['MESSAGE', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ScreenSaver.Computer.Computer_Name_Clock':{
-		'help':'ScreenSaver.Computer.Computer_Name_Clock - Turns on Clock for Computer Name Module; computer domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.Computer.Computer_Name_Clock - Turns on Clock for Computer Name Module; computer domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['showClock', '-bool', 'true'], },
 		],
 	},
 	'ScreenSaver.User.Basic.Message':{
-		'help':'ScreenSaver.User.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; user/byhost domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.User.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; user/byhost domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.ScreenSaver.Basic', 'args':['MESSAGE', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ScreenSaver.User.Computer_Name':{
-		'help':'ScreenSaver.User.Computer_Name - Sets screensaver to Computer Name; user/byhost domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.User.Computer_Name - Sets screensaver to Computer Name; user/byhost domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['moduleDict', '-dict', 'path', '/System/Library/Frameworks/ScreenSaver.framework/Resources/Computer Name.saver'], },
 		],
 	},
 	'ScreenSaver.User.Computer_Name_Clock':{
-		'help':'ScreenSaver.User.Computer_Name_Clock - Turns on Clock for Computer Name Module; user/byhost domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.User.Computer_Name_Clock - Turns on Clock for Computer Name Module; user/byhost domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['showClock', '-bool', 'true'], },
 		],
 	},
 	'ScreenSaver.User.askForPassword':{
-		'help':'ScreenSaver.User.askForPassword'+pref_delim+'<1|0> - Set screensaver password; 1 arg: 0 off, 1 on; user domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'ScreenSaver.User.askForPassword'+pref_delim+'<1|0> - Set screensaver password; 1 arg: 0 off, 1 on; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'user':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['askForPassword', '-int', '%ARG0%'], 'arg_count':1, },
@@ -646,44 +709,44 @@ prefs = {
 	# SoftwareUpdate #
 	##################
 	'SoftwareUpdate.Computer.SetCatalogURL':{
-		'help':'SoftwareUpdate.Computer.SetCatalogURL'+pref_delim+'<http://example.com:8088/index.sucatalog> - Sets the SoftwareUpdate CatalogURL, which must be a Mac OS X Server with the Software Update service activated; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.SetCatalogURL'+pref_delim+'<http://example.com:8088/index.sucatalog> - Sets the SoftwareUpdate CatalogURL, which must be a Mac OS X Server with the Software Update service activated; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['CatalogURL', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	# https://derflounder.wordpress.com/2014/12/29/managing-automatic-app-store-and-os-x-update-installation-on-yosemite/
 	'SoftwareUpdate.Computer.AutomaticCheckEnabled':{
-		'help':'SoftwareUpdate.Computer.AutomaticCheckEnabled'+pref_delim+'<true|false> - "Automatically check for updates"; 1 arg: true/false; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.AutomaticCheckEnabled'+pref_delim+'<true|false> - "Automatically check for updates"; 1 arg: true/false; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['AutomaticCheckEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutomaticDownload':{
-		'help':'SoftwareUpdate.Computer.AutomaticDownload'+pref_delim+'<true|false> - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.AutomaticDownload'+pref_delim+'<true|false> - "Download newly available updates in the background", requires AutomaticCheckEnabled; 1 arg: true/false; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['AutomaticDownload', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutoUpdate':{
-		'help':'SoftwareUpdate.Computer.AutoUpdate'+pref_delim+'<true|false> - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.AutoUpdate'+pref_delim+'<true|false> - "Install app updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.commerce', 'args':['AutoUpdate', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.AutoUpdateRestartRequired':{
-		'help':'SoftwareUpdate.Computer.AutoUpdateRestartRequired'+pref_delim+'<true|false> - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.AutoUpdateRestartRequired'+pref_delim+'<true|false> - "Install macOS updates", requires AutomaticCheckEnabled and AutomaticDownload; 1 arg: true/false; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.commerce', 'args':['AutoUpdateRestartRequired', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SoftwareUpdate.Computer.SystemSecurityUpdates':{
-		'help':'SoftwareUpdate.Computer.SystemSecurityUpdates'+pref_delim+'<true|false> - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: true/false; (10.12)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SoftwareUpdate.Computer.SystemSecurityUpdates'+pref_delim+'<true|false> - "Install system data files and security updates", requires AutomaticCheckEnabled; 1 arg: true/false; (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['ConfigDataInstall', '-bool', '%ARG0%'], 'arg_count':1, },
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['CriticalUpdateInstall', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -693,24 +756,24 @@ prefs = {
 	# SystemUIServer #
 	##################
 	'SystemUIServer.User.DontAutoLoadReset':{
-		'help':'SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.systemuiserver', 'command':'delete', 'args':['dontAutoLoad'], },
 		],
 	},
 	'SystemUIServer.User.DontAutoLoad':{
-		'help':'SystemUIServer.User.DontAutoLoad'+pref_delim+'<path of menu extra> - ; user/byhost domain (10.11)',
-		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', },
+		'help':'SystemUIServer.User.DontAutoLoad'+pref_delim+'<path of menu extra> - ; user/byhost domain (10.11-10.14)',
+		'versions':{ '10.11':'10.11', '10.12':'10.11', '10.13':'10.11', '10.14':'10.11', },
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.systemuiserver', 'args':['dontAutoLoad', '-array-add', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SystemUIServer.User.AirplayVisibility':{
-		'help':'SystemUIServer.User.AirplayVisibility'+pref_delim+'<true|false> - ; user domain (10.12)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'SystemUIServer.User.AirplayVisibility'+pref_delim+'<true|false> - ; user domain (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'user':True,
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.systemuiserver', 'args':['NSStatusItem Visibile com.apple.menuextra.airplay', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -720,17 +783,23 @@ prefs = {
 	# Time #
 	############
 	'Time.Computer.Server':{
-		'help':'Time.Computer.Server - (10.11)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		#https://apple.stackexchange.com/questions/117864/how-can-i-tell-if-my-mac-is-keeping-the-clock-updated-properly
+		'help':'Time.Computer.Server - (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.14', },
 		'10.12':[
 			{ 'type':'function', 'function':'systemsetup', 'args':['-setusingnetworktime', 'on'], },
 			{ 'type':'function', 'function':'systemsetup', 'args':['-setnetworktimeserver', '%ARG0%'], 'arg_count':1, },
 			{ 'type':'function', 'function':'sh2', 'args':['/usr/sbin/ntpdate', '-u', '%ARG0%'], 'arg_count':1, },
 		],
+		'10.14':[
+			{ 'type':'function', 'function':'systemsetup', 'args':['-setusingnetworktime', 'on'], },
+			{ 'type':'function', 'function':'systemsetup', 'args':['-setnetworktimeserver', '%ARG0%'], 'arg_count':1, },
+			{ 'type':'function', 'function':'sh2', 'args':['/usr/bin/sntp', '-sS', '%ARG0%'], 'arg_count':1, },
+		],
 	},
 	'Time.Computer.Zone':{
-		'help':'Time.Computer.Zone - (10.11)',
-		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+		'help':'Time.Computer.Zone - (10.11-10.14)',
+		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 		'10.12':[
 			{ 'type':'function', 'function':'systemsetup', 'args':['-settimezone', '%ARG0%'], 'arg_count':1, },
 		],
@@ -750,7 +819,7 @@ prefs = {
 # 	#################
 # 	'Function.Test':{
 # 		'help':'Test',
-# 		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', },
+# 		'versions':{ '10.11':'10.12', '10.12':'10.12', '10.13':'10.12', '10.14':'10.12', },
 # 		'user':True,
 # 		'10.12':[
 # 			{ 'type':'function', 'function':'say', 'args':['%ARG1%', 'and', '%ARG0%'], 'arg_count':2, },
@@ -945,12 +1014,14 @@ def pref(args):
 				if command_args == None or len(command_args) > 1:
 					print 'Script error: PlistBuddy requires an argument.  Args: ' + '('+str(command_args)+').'
 					sys.exit(1)
-				command = [ '/usr/libexec/PlistBuddy', '-c', command_type+' '+command_args[0], pref_path ]
-				commands.append( command )
-
-				# Add a chown if it's in the user homedir
-				if username != None:
-					chown_these_files[pref_path] = [ '/usr/sbin/chown', username + ':' + group, pref_path ]
+				if command_type == "Delete" and not os.path.exists(pref_path):
+					print 'PlistBuddy can\'t delete '+command_args[0]+' because '+pref_path+' doesn\'t exist'
+				else:
+					command = [ '/usr/libexec/PlistBuddy', '-c', command_type+' '+command_args[0], pref_path ]
+					commands.append( command )
+					# Add a chown if it's in the user homedir
+					if username != None:
+						chown_these_files[pref_path] = [ '/usr/sbin/chown', username + ':' + group, pref_path ]
 
 			# Function
 			elif data['type'] == 'function':
@@ -989,16 +1060,62 @@ def say(args):
 
 def disable_touristd():
 	#https://carlashley.com/2016/10/19/com-apple-touristd/
-	text = sh( '/usr/libexec/PlistBuddy -c Print -x "/System/Library/PrivateFrameworks/Tourist.framework/Resources/Tours.plist" | grep https://' )
-	text = text.split("\n")
-	defaults_command = [ { 'type':'defaults', 'domain':'com.apple.touristd', 'args':['firstOSLogin', '-date', '2018-1-1'], } ]
-	for url in text:
-		if url != '':
-			url = re.sub(r'.*<string>([^<]*).*', r'\1', url)
-			defaults_command.append( { 'type':'defaults', 'domain':'com.apple.touristd', 'args':['seed-'+url, '-date', '2018-1-1'], 'user':True, } )
 	my_os = get_short_os_version()
-	prefs['Tourist.User.disable']['versions'] = { my_os:'all' }
-	prefs['Tourist.User.disable']['all'] = defaults_command
+	if my_os == '10.12':
+		text = sh( '/usr/libexec/PlistBuddy -c Print -x "/System/Library/PrivateFrameworks/Tourist.framework/Resources/Tours.plist" | grep https://' )
+		text = text.split("\n")
+		defaults_command = [ { 'type':'defaults', 'domain':'com.apple.touristd', 'args':['firstOSLogin', '-date', '2018-1-1'], } ]
+		for url in text:
+			if url != '':
+				url = re.sub(r'.*<string>([^<]*).*', r'\1', url)
+				defaults_command.append( { 'type':'defaults', 'domain':'com.apple.touristd', 'args':['seed-'+url, '-date', '2018-1-1'], 'user':True, } )
+		prefs['Tourist.User.disable']['versions'] = { my_os:'all' }
+		prefs['Tourist.User.disable']['all'] = defaults_command
+	elif my_os == '10.14':
+		text = [
+			'seed-viewed-+trJt2VsTvK1yfPGwOySDw',
+			'seed-viewed-/+vP78HsSh+Yeb4xJnUT9A',
+			'seed-viewed-2+LvxAVyT6qnV1sDMZT0NA',
+			'seed-viewed-40reAuuYTHOsx4oGcx4qrA',
+			'seed-viewed-APhNaYV1RxSS41lC7ZJJ9Q',
+			'seed-viewed-B70mVuHeT0WUgKh/VdUuZQ',
+			'seed-viewed-ETJeJ9/1QmmWUde7uK8fDg',
+			'seed-viewed-EWfaSdJwR/6f1BYGiyLpcQ',
+			'seed-viewed-EeEFv8cyS0CVe3ia2UEehA',
+			'seed-viewed-FQrkbNP9ThKQQtpqx2saFg',
+			'seed-viewed-GZAJdmpdSqmfH2PkCr8ebw',
+			'seed-viewed-JTecrrXDSVut2tSfltty9Q',
+			'seed-viewed-KwUoo0fRRM2VPmIm0V67xg',
+			'seed-viewed-LR2P9+rnQ2q9xSUy1ZgWOw',
+			'seed-viewed-MM3ne3nTR9eXFyVwZ5gN7Q',
+			'seed-viewed-Pa88nesPSO6POlutVN4/Sg',
+			'seed-viewed-SdV08ZZQRxOCWq6JBEXmfg',
+			'seed-viewed-Tu81gKhDTvmNkjyqcPBfKA',
+			'seed-viewed-UhiR1M79RWmXLIQr4M0AWw',
+			'seed-viewed-WEyaCPMVRB6HbnmRq9EnNQ',
+			'seed-viewed-We59wh+OTa6c1yas/yppwg',
+			'seed-viewed-b/dLke8ZTQaN9KKrxfwDQw',
+			'seed-viewed-baXokbqsQ/2KLkzIZrR6ng',
+			'seed-viewed-bydF6fX5Sp6aBYdEXD0VwQ',
+			'seed-viewed-d+gfl8CNTNeauANKjf9WqA',
+			'seed-viewed-f/Pn3F4RScOh+GUBKO9sRA',
+			'seed-viewed-fWRpNw7IR3S3qxX63nmvMw',
+			'seed-viewed-hP2OZh+MTEKeFcjgec2gZw',
+			'seed-viewed-krdWS8DSQIqJSqQFXW1/pw',
+			'seed-viewed-kti4ZkMKQFyCL2kbgCY23A',
+			'seed-viewed-lEDfW5O+SZe8KTQ93HGOPA',
+			'seed-viewed-lQlm1yrMS0GPVyAL44id+A',
+			'seed-viewed-n87FVu1TSwGzble8vqBvsg',
+			'seed-viewed-pDWyREoARJm5V1mJYr9GKg',
+			'seed-viewed-srluh6uOQiuWCzxguqhDNw',
+			'seed-https://help.apple.com/macOS/mojave/mac-basics',
+			'seed-https://help.apple.com/macOS/mojave/whats-new',
+		]
+		defaults_command = [ { 'type':'defaults', 'domain':'com.apple.touristd', 'args':['firstOSLogin', '-date', '2019-1-1'], } ]
+		for url in text:
+			defaults_command.append( { 'type':'defaults', 'domain':'com.apple.touristd', 'args':[url, '-date', '2019-1-1'], 'user':True, } )
+		prefs['Tourist.User.disable']['versions'] = { my_os:'all' }
+		prefs['Tourist.User.disable']['all'] = defaults_command
 
 ##########################################################################################
 
@@ -1008,7 +1125,7 @@ mak_commands['ard_user'] = {
 }
 
 def ard_userHelp(name):
-	return '''Usage: %s <options> ard_user [-c] <username[,username..]> [setting[ setting..]]
+	return '''Usage: %s [<options>] ard_user [-c] <username[,username..]> [setting[ setting..]]
 
 	Configures ARD sharing for specific users (all users is turned off) and restarts the
 	service.
@@ -1039,7 +1156,7 @@ def ard_userHelp(name):
 ''' % (name,name,name,name,name)
 
 def ard_user(args):
-	kickstart = '/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart';
+	kickstart = '/System/Library/CoreServices/RemoteManagement/ARDAgent.app/Contents/Resources/kickstart'
 	clear = False
 	try:
 		(optargs, args) = getopt.getopt(args, 'r')
@@ -1059,7 +1176,7 @@ def ard_user(args):
 		if '-ControlObserve' in privs and '-ObserveOnly' in privs:
 			usage( 'Specify either -ControlObserve or -ObserveOnly but not both', 'ard' )
 	else:
-		privs = ['-ChangeSettings', '-ControlObserve', '-DeleteFiles', '-GenerateReports', '-OpenQuitApps', '-RestartShutDown', '-SendFiles', '-ShowObserve', '-TextMessages'];
+		privs = ['-ChangeSettings', '-ControlObserve', '-DeleteFiles', '-GenerateReports', '-OpenQuitApps', '-RestartShutDown', '-SendFiles', '-ShowObserve', '-TextMessages']
 	sh( kickstart + '-deactivate -configure -access -off' )
 	sh( '/usr/bin/defaults write /Library/Preferences/com.apple.RemoteManagement ARD_AllLocalUsers -bool FALSE' )
 	if clear:
@@ -1083,7 +1200,7 @@ mak_commands['hack_jamf_hooks'] = {
 }
 
 def hack_jamf_hooksHelp(name):
-	return '''Usage: %s <options> hack_jamf_hooks [value]
+	return '''Usage: %s [<options>] hack_jamf_hooks [value]
 
 	Changes loginhook.sh checkJSSConnection from 0 to either 6 (default) or what you specify.
 	This waits for a network connection before any jamf login policies will run.
@@ -1105,30 +1222,15 @@ def hack_jamf_hooks(args):
 
 ##########################################################################################
 
-mak_commands['locatedb'] = {
-	'help':'locatedbHelp',
-	'main':'locatedb',
-}
-
-def locatedbHelp(name):
-	return '''Usage: %s <options> locatedb
-
-	Loads locate db
-
-''' % (name)
-
-def locatedb(args):
-	sh( '/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist' )
-
-##########################################################################################
-
 mak_commands['launchdaemon'] = {
 	'help':'launchdaemonHelp',
 	'main':'launchdaemon',
 }
 
 def launchdaemonHelp(name):
-	return '''Usage: %s <options> launchdaemon <plist_file> <program arg> [<program arg>..] [;|:] <key> <value> [<key> <value>..]
+	return '''Usage: %s [<options>] launchdaemon [<options>] <plist_file> <program arg> [<program arg>..] [;|:] <key> <value> [<key> <value>..]
+
+	-x don't unload and reload the plist with launchctl (the default will attempt to unload it if it exists, change the file, then reload)
 
 	plist_file must be of form /path/label.plist
 
@@ -1139,9 +1241,10 @@ def launchdaemonHelp(name):
 	https://en.wikipedia.org/wiki/Launchd
 
 	Examples:
-		%s launchdaemon example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
-		%s launchdaemon example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
-		%s launchdaemon example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
+		%s launchdaemon /Library/LaunchDaemons/example.plist echo hi \; StartCalendarInterval Hour 4 Minute 0 Weekday 0 \;
+		%s launchdaemon /Library/LaunchDaemons/example.plist echo hi \; StandardOutPath /var/log/complete_enrollment.log StandardErrorPath /var/log/complete_enrollment.err.log RunAtLoad 1
+		%s launchdaemon /Library/LaunchDaemons/example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
+		%s launchdaemon /Library/LaunchAgents/example.plist /Applications/Safari.app/Contents/MacOS/Safari \; LimitLoadToSessionType Aqua RunAtLoad 1 \;
 
 ''' % (name,name,name,name)
 
@@ -1154,7 +1257,7 @@ def parseLaunchdPlist(args):
 		if key1 == None:
 			key1 = arg
 		# String
-		elif key1 in ['Label', 'WorkingDirectory', 'GroupName', 'StandardOutPath', 'StandardErrorPath', 'UserName']:
+		elif key1 in ['Label', 'WorkingDirectory', 'GroupName', 'StandardOutPath', 'StandardErrorPath', 'UserName', 'LimitLoadToSessionType']:
 			hash[key1] = arg
 			key1 = None
 		# Bool
@@ -1203,39 +1306,62 @@ def parseLaunchdPlist(args):
 
 def launchdaemon(args):
 	import plistlib
-	if len(args) <= 3:
+	reload = True
+	try:
+		(optargs, rargs) = getopt.getopt(args, 'x')
+	except getopt.GetoptError, e:
+		print e
+		sys.exit(2)
+	for opt, arg in optargs:
+		if opt == '-x':
+			reload = False
+	if len(rargs) <= 3:
 		usage( 'You must have a path, program arguments, and a trigger condition', 'launchdaemon' )
-	path = args[0]
+	path = rargs[0]
 	label = re.sub(r'.*\/([^\/])\.plist$', r'\1', path)
 	if label == '':
 		usage('Could not build a label from the path, did the path end with ".plist"?', 'launchdaemon')
-	if debug or verbose:
-		print( 'Label: '+label )
+	debug_print( 'Label: '+label )
 	flag = True
 	program_args = []
 	ii = 1
 	while flag:
-		if ii >= len(args):
+		if ii >= len(rargs):
 			usage('You must terminate ProgramArguments items with ";" (don\'t forget to escape it) or ":".', 'launchdaemon')
-		if args[ii] != ';' and args[ii] != ':':
-			if args[ii][-1] == ';' or args[ii][-1] == ':':
-				args[ii] = args[ii][:-1]
+		if rargs[ii] != ';' and rargs[ii] != ':':
+			if rargs[ii][-1] == ';' or rargs[ii][-1] == ':':
+				rargs[ii] = rargs[ii][:-1]
 				flag = False
-			program_args.append( args[ii] )
+			program_args.append( rargs[ii] )
 			ii += 1
 		else:
 			flag = False
-	args = args[ii+1:]
-	if debug or verbose:
-		print( program_args )
-		print( args )
+	rargs = rargs[ii+1:]
+	debug_print( program_args, rargs )
 	if os.path.exists( path ):
 		sh( '/bin/launchct unload ' + path )
-	plist = parseLaunchdPlist(args)
+	plist = parseLaunchdPlist(rargs)
 	plist['Label'] = label
 	plist['ProgramArguments'] = program_args
 	plistlib.writePlist( plist, path )
 	sh( '/bin/launchct load ' + path )
+
+##########################################################################################
+
+mak_commands['locatedb'] = {
+	'help':'locatedbHelp',
+	'main':'locatedb',
+}
+
+def locatedbHelp(name):
+	return '''Usage: %s [<options>] locatedb
+
+	Loads locate db
+
+''' % (name)
+
+def locatedb(args):
+	sh( '/bin/launchctl load -w /System/Library/LaunchDaemons/com.apple.locate.plist' )
 
 ##########################################################################################
 
@@ -1245,7 +1371,7 @@ mak_commands['networksetup'] = {
 }
 
 def networksetupHelp(name):
-	return '''Usage: %s <options> networksetup ...
+	return '''Usage: %s [<options>] networksetup ...
 
 	This is just a shortcut to /usr/sbin/networksetup.  See `man networksetup` for options.
 
@@ -1262,13 +1388,39 @@ def networksetup(args):
 
 ##########################################################################################
 
+mak_commands['scutil'] = {
+	'help':'scutilHelp',
+	'main':'scutil',
+}
+
+def scutilHelp(name):
+	return '''Usage: %s [<options>] scutil ...
+
+	This is just a shortcut to /usr/sbin/scutil.  See `man scutil` for options.
+
+	Why?  Because I'll forget about scutil otherwise (it's not like I use the command
+	very much).
+
+	Example:
+		%s scutil --set ComputerName "alpha centauri"
+		%s scutil --set HostName alpha
+		%s scutil --set LocalHostName centauri
+		%s scutil --get HostName
+
+''' % (name,name)
+
+def scutil(args):
+	return sh( '/usr/sbin/scutil ' + ' '.join(args) )
+
+##########################################################################################
+
 mak_commands['set_volume'] = {
 	'help':'set_volumeHelp',
 	'main':'set_volume',
 }
 
 def set_volumeHelp(name):
-	return '''Usage: %s <options> set_volume <Volume> [<Output Volume>] [<Input Volume>]
+	return '''Usage: %s [<options>] set_volume <Volume> [<Output Volume>] [<Input Volume>]
 
 	Sets the speaker and microphone levels.
 
@@ -1309,7 +1461,7 @@ mak_commands['shell_paths'] = {
 }
 
 def shell_pathsHelp(name):
-	return '''Usage: %s <options> shell_paths <path> <name>
+	return '''Usage: %s [<options>] shell_paths <path> <name>
 
 	Adds the <path> to /private/etc/paths.d/<name>
 
@@ -1323,11 +1475,9 @@ def shell_paths(args):
 		usage( 'Missing arguments', 'shell_paths' )
 	search = args[0]
 	path = '/private/etc/paths.d/' + args[1]
-	if debug or verbose:
-		print 'Saving "' + search + '" to ' + path
-	file = open(path, 'w')
-	file.write(search)
-	file.close()
+	debug_print( 'Saving "' + search + '" to ' + path )
+	with open(path, 'w') as file:
+		file.write(search)
 
 ##########################################################################################
 
@@ -1337,7 +1487,7 @@ mak_commands['systemsetup'] = {
 }
 
 def systemsetupHelp(name):
-	return '''Usage: %s <options> systemsetup ...
+	return '''Usage: %s [<options>] systemsetup ...
 
 	This is just a shortcut to /usr/sbin/systemsetup.  See `man systemsetup` for options.
 
@@ -1355,11 +1505,72 @@ def systemsetup(args):
 	return sh( '/usr/sbin/systemsetup ' + ' '.join(args) )
 
 ##########################################################################################
+
+mak_commands['uvar'] = {
+	'help':'uvarHelp',
+	'main':'uvar',
+}
+
+def uvarHelp(name):
+	return '''Usage: %s [<options>] uvar <path> <variable> <value> [<backup extension>]
+
+	Unix VARiable.  This will search <path> for the first instance of "^<variable>" and
+	change it to "<variable><value>" if it's not set (using sed).  If "^<variable>"
+	doesn't occur then "<variable><value>" will be appended to the end (surrounded by
+	linefeeds).
+
+	The optional backup extension will save a backup with the specified extension.
+
+	Examples:
+		%s uvar /etc/postfix/main.cf relayhost " = example.com" .bak
+		%s uvar /etc/ssh/sshd_config AllowUsers " james spencer" .bak
+		%s uvar /etc/ssh/sshd_config XAuthLocation " /opt/X11/bin/xauth"
+
+''' % (name,name,name,name)
+
+def uvar(args):
+	if len(args) < 3:
+		usage( 'Missing arguments', 'uvar' )
+	path = args[0]
+	var = args[1]
+	val = args[2]
+	ext = ( args[3] if len(args) == 4 else '' )
+	if os.path.exists( path ):
+		append = True
+		sed = False
+		with open(path, 'r') as file:
+			for line in file:
+				z = re.match("^"+var+"(.*)", line)
+				if z:
+					append = False
+					if z.groups()[0] != val:
+						sed = True
+					elif debug or verbose:
+							print( 'Text "'+var+val+'" already present in '+path )
+					break
+		if sed:
+			sh2( [ "/usr/bin/sed", "-i", ext, "s/^"+var+".*/"+var+val+"/", path ] )
+		if append:
+			debug_print( 'Appending "' + var+val + '" to ' + path )
+			if ext != '':
+				copyfile(path, path+ext)
+			with open(path, 'a') as file:
+				file.write("\n"+var+val+"\n")
+	else:
+		usage( 'File ('+path+') does not exist', 'uvar' )
+
+##########################################################################################
 ##########################################################################################
 ##########################################################################################
 ##########################################################################################
 
+def debug_print(*args):
+	if debug or verbose:
+		for cc, message in enumerate(args):
+			print( message )
+
 def sh(cmd):
+	# Shell is true, expects a string
 	if type(cmd) is list:
 		print "Script error: use sh2 to pass args as a list"
 		sys.exit(1)
@@ -1373,6 +1584,7 @@ def sh(cmd):
 		return Popen(cmd,shell=True,stdout=PIPE,stderr=PIPE).communicate()[0]
 
 def sh2(cmd):
+	# Shell is false (default), expects list or string containing a command without args
 	if debug or verbose:
 		if type(cmd) is list:
 			print( ' '.join(cmd) )
