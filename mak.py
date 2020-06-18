@@ -1246,7 +1246,7 @@ def launchdaemonHelp(name):
 		%s launchdaemon /Library/LaunchDaemons/example.plist echo hi \; WatchPaths /Library/Admin/launchdwatch \;
 		%s launchdaemon /Library/LaunchAgents/example.plist /Applications/Safari.app/Contents/MacOS/Safari \; LimitLoadToSessionType Aqua RunAtLoad 1 \;
 
-''' % (name,name,name,name)
+''' % (name,name,name,name,name)
 
 def parseLaunchdPlist(args):
 	hash = dict()
@@ -1407,7 +1407,7 @@ def scutilHelp(name):
 		%s scutil --set LocalHostName centauri
 		%s scutil --get HostName
 
-''' % (name,name)
+''' % (name,name,name,name,name)
 
 def scutil(args):
 	return sh( '/usr/sbin/scutil ' + ' '.join(args) )
