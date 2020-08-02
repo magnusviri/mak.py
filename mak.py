@@ -87,11 +87,59 @@ pref_list = {
 	'Global.User.FullKeyboardAccess':{
 		'help':'Global.User.FullKeyboardAccess - (10.14)',
 		'help':'Global.User.FullKeyboardAccess'+pref_delim+'<int> - changing this pref requires a logout/login ; 1 arg: 0 = Text boxes and lists only, 2 = All controls; user domain (10.14)',
-		'unit_tests':['Global.User.FullKeyboardAccess=2',],
+		'unit_tests':['Global.User.FullKeyboardAccess'+pref_delim+'2',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['AppleKeyboardUIMode', '-int', '%ARG0%'], 'arg_count':1, },
 		],
 	},
+	'Global.User.FullKeyboardAccess':{
+		'help':'Global.User.FullKeyboardAccess - (10.14)',
+		'help':'Global.User.FullKeyboardAccess'+pref_delim+'<int> - changing this pref requires a logout/login ; 1 arg: 0 = Text boxes and lists only, 2 = All controls; user domain (10.14)',
+		'unit_tests':['Global.User.FullKeyboardAccess'+pref_delim+'2',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['AppleKeyboardUIMode', '-int', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+
+# 	<key>KeyRepeat</key>
+# 	<integer>2</integer>
+# 120, 90, 60, 30, 15, 12, 6, 2 fastest
+#
+# 	<key>InitialKeyRepeat</key>
+# 	<integer>120</integer>
+# off 300000, slowest 120, 94, 68, 35, 25, 15 fastest
+#
+# NSAutomaticCapitalizationEnabled
+# NSAutomaticDashSubstitutionEnabled
+# NSAutomaticPeriodSubstitutionEnabled
+# NSAutomaticQuoteSubstitutionEnabled
+# NSAutomaticSpellingCorrectionEnabled
+# NSAutomaticTextCompletionEnabled true
+#
+# 	<key>NSPreferredWebServices</key>
+# 	<dict>
+# 		<key>NSWebServicesProviderWebSearch</key>
+# 		<dict>
+# 			<key>NSDefaultDisplayName</key>
+# 			<string>DuckDuckGo</string>
+# 			<key>NSProviderIdentifier</key>
+# 			<string>com.duckduckgo</string>
+# 		</dict>
+# 	</dict>
+#
+# 	<key>NSUserDictionaryReplacementItems</key>
+# 	<array>
+# 		<dict>
+# 			<key>on</key>
+# 			<integer>1</integer>
+# 			<key>replace</key>
+# 			<string>omw</string>
+# 			<key>with</key>
+# 			<string>On my way!</string>
+# 		</dict>
+# 	</array>
+
+
 
 	########################
 	# Apple Remote Desktop #
@@ -105,21 +153,21 @@ pref_list = {
 	},
 	'ARD.Computer.Text2':{
 		'help':'ARD.Computer.Text2 - (10.9)',
-		'unit_tests':['ARD.Computer.Text2=Text2',],
+		'unit_tests':['ARD.Computer.Text2'+pref_delim+'Text2',],
 		'10.9':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text2', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ARD.Computer.Text3':{
 		'help':'ARD.Computer.Text3 - (10.9)',
-		'unit_tests':['ARD.Computer.Text3=Text3',],
+		'unit_tests':['ARD.Computer.Text3'+pref_delim+'Text3',],
 		'10.9':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text3', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ARD.Computer.Text4':{
 		'help':'ARD.Computer.Text4 - (10.9)',
-		'unit_tests':['ARD.Computer.Text4=Text4',],
+		'unit_tests':['ARD.Computer.Text4'+pref_delim+'Text4',],
 		'10.9':[
 			{ 'type':'defaults', 'domain':'com.apple.RemoteDesktop', 'args':['Text4', '-string', '%ARG0%'], 'arg_count':1, },
 		],
@@ -129,7 +177,7 @@ pref_list = {
 	#########
 	'Clock.User.ShowSeconds':{
 		'help':'Clock.User.ShowSeconds - user domain (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Clock.User.ShowSeconds',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.menuextra.clock', 'args':['DateFormat', '-string', '\'EEE hh:mm:ss a\''], },
 		],
@@ -139,7 +187,7 @@ pref_list = {
 	#################
 	'CrashReporter.User.Use_Notification_Center':{
 		'help':'CrashReporter.User.Use_Notification_Center=<1|0> - ; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['CrashReporter.User.Use_Notification_Center'+pref_delim+'1',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.CrashReporter', 'args':['UseUNC', '%ARG0%'], 'arg_count':1, },
 		],
@@ -149,28 +197,28 @@ pref_list = {
 	########
 	'Dock.User.launchanim':{
 		'help':'Dock.User.launchanim'+pref_delim+'<true|false> - ; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Dock.User.launchanim'+pref_delim+'false',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['launchanim', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.expose-animation-duration':{
 		'help':'Dock.User.expose-animation-duration'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Dock.User.expose-animation-duration'+pref_delim+'2.0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['expose-animation-duration', '-float', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.autohide-delay':{
 		'help':'Dock.User.autohide-delay'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Dock.User.autohide-delay'+pref_delim+'5.0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['autohide-delay', '-float', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Dock.User.DisableAllAnimations':{
 		'help':'Dock.User.DisableAllAnimations'+pref_delim+'<float> - ; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Dock.User.DisableAllAnimations'+pref_delim+'1.0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Dock', 'args':['DisableAllAnimations', '-float', '%ARG0%'], 'arg_count':1, },
 		],
@@ -180,7 +228,7 @@ pref_list = {
 	##########
 	'Finder.User.ShowTabView':{
 		'help':'Finder.User.ShowTabView'+pref_delim+'<true|false> - View menu: Show Tab View; 1 arg; user domain (10.12)',
-		'unit_tests':['',],
+		'unit_tests':['Finder.User.ShowTabView',],
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowTabView', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -194,7 +242,7 @@ pref_list = {
 	},
 	'Finder.User.ShowStatusBar':{
 		'help':'Finder.User.ShowStatusBar'+pref_delim+'<true|false> - View menu: Show Status Bar; 1 arg; user domain (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Finder.User.ShowStatusBar=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['ShowStatusBar', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -229,7 +277,7 @@ pref_list = {
 	},
 	'Finder.User.NewWindowTarget':{
 		'help':'Finder.User.NewWindowTarget'+pref_delim+'<PfCm|PfVo|PfHm|PfDe|PfDo|PfID|PfAF|PfLo> - General tab: New Finder windows shows: PfCm - computer, PfVo - volume, PfHm - Home, PfDe - Desktop, PfDo - Documents, PfID - iCloud, PfAF - All Files, PfLo - Other; 1 arg; user domain (10.12)',
-		'unit_tests':['',],
+		'unit_tests':['Finder.User.NewWindowTarget=PfHm',],
 		'10.12':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['NewWindowTarget', '%ARG0%'], 'arg_count':1, },
 		],
@@ -304,7 +352,7 @@ pref_list = {
 # 	<string>/Applications</string>
 	'Finder.User._FXShowPosixPathInTitle':{
 		'help':'Finder.User._FXShowPosixPathInTitle'+pref_delim+'<true|false> - Shows full path in title; 1 arg; user domain (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Finder.User._FXShowPosixPathInTitle=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.finder', 'args':['_FXShowPosixPathInTitle', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -373,7 +421,7 @@ pref_list = {
 	},
 	'Loginwindow.Computer.DisableScreenLockImmediate':{
 		'help':'Loginwindow.Computer.DisableScreenLockImmediate'+pref_delim+'<true|false> - Gets rid of the Lock Screen option in the Apple Menu. (10.13-10.15)',
-		'unit_tests':['',],
+		'unit_tests':['Loginwindow.Computer.DisableScreenLockImmediate=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.loginwindow', 'args':['DisableScreenLockImmediate', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -406,21 +454,21 @@ pref_list = {
 	# https://docs.microsoft.com/en-us/office365/enterprise/network-requests-in-office-2016-for-mac
 	'Microsoft.Computer.AcknowledgeDataCollectionPolicy':{
 		'help':'Microsoft.Computer.AcknowledgeDataCollectionPolicy - Sets AcknowledgedDataCollectionPolicy so that it doesn\'t show the annoying dialog (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Microsoft.Computer.AcknowledgeDataCollectionPolicy',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2', 'args':['AcknowledgedDataCollectionPolicy', 'RequiredDataOnly'], },
 		],
 	},
 	'Microsoft.User.AutoUpdateHowToCheck':{
 		'help':'Microsoft.User.AutoUpdateHowToCheck'+pref_delim+'Value - Sets AutoUpdate check method; Values are Manual, AutomaticCheck, and AutomaticDownload (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Microsoft.User.AutoUpdateHowToCheck=Manual',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.microsoft.autoupdate2', 'args':['HowToCheck', '-string', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'Microsoft.User.SendAllTelemetryEnabled':{
 		'help':'Microsoft.User.SendAllTelemetryEnabled'+pref_delim+'<true|false> - Sets SendAllTelemetryEnabled (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['Microsoft.User.SendAllTelemetryEnabled=false',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.microsoft.Word', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
 			{ 'type':'defaults', 'domain':'com.microsoft.Excel', 'args':['SendAllTelemetryEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -437,7 +485,7 @@ pref_list = {
 	#########
 	'Mouse.User.Click.Double':{
 		'help':'Mouse.User.Click.Double - Configures mouse double click; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Mouse.User.Click.Double',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleHIDMouse', 'args':['Button2', '-int', '2'], },
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleBluetoothMultitouch.mouse', 'args':['MouseButtonMode', '-string', 'TwoButton'], },
@@ -445,18 +493,69 @@ pref_list = {
 	},
 	'Mouse.User.Click.Single':{
 		'help':'Mouse.User.Click.Single - Configures mouse single click; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Mouse.User.Click.Single',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleHIDMouse', 'args':['Button2', '-int', '1'], },
 			{ 'type':'defaults', 'domain':'com.apple.driver.AppleBluetoothMultitouch.mouse', 'args':['MouseButtonMode', '-string', 'OneButton'], },
 		],
 	},
+	'Mouse.User.ScrollDirection':{
+		'help':'Mouse.User.ScrollDirection'+pref_delim+'<true|false> - true = "natrual"; 1 arg; user domain (10.14)',
+		'unit_tests':['Mouse.User.ScrollDirection'+pref_delim+'false',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['com.apple.swipescrolldirection', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.SecondaryClick':{
+		'help':'Mouse.User.SecondaryClick'+pref_delim+'<string> - SecondaryClick ; 1 arg: OneButton|TwoButton|TwoButtonSwapped; user domain (10.14)',
+		'unit_tests':['Mouse.User.SecondaryClick'+pref_delim+'TwoButton',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.AppleMultitouchMouse', 'args':['MouseButtonMode', '-string', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.SmartZoom':{
+		'help':'Mouse.User.SmartZoom'+pref_delim+'<int> - SmartZoom ; 1 arg: <int>; user domain (10.14)',
+		'unit_tests':['Mouse.User.SmartZoom'+pref_delim+'0',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.AppleMultitouchMouse', 'args':['MouseOneFingerDoubleTapGesture', '-int', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.MouseSpeed':{
+		'help':'Mouse.User.MouseSpeed'+pref_delim+'<real> - slow 0.0, 0.125, .5, .6875, .875, 1, 1.5, 2, 2.5, 3 fast ; 1 arg: 0 = Text boxes and lists only, 2 = All controls; user domain (10.14)',
+		'unit_tests':['Mouse.User.MouseSpeed'+pref_delim+'0.875',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['com.apple.mouse.scaling', '-real', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.SwipeBetweenPages':{
+		'help':'Mouse.User.SwipeBetweenPages'+pref_delim+'<true|false> - ; 1 arg; user domain (10.14)',
+		'unit_tests':['Mouse.User.SwipeBetweenPages'+pref_delim+'false',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['AppleEnableMouseSwipeNavigateWithScrolls', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.SwipeBetweenApps':{
+		'help':'Mouse.User.SwipeBetweenApps'+pref_delim+'<true|false> ; 1 arg; user domain (10.14)',
+		'unit_tests':['Mouse.User.SwipeBetweenApps'+pref_delim+'0',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.AppleMultitouchMouse', 'args':['MouseTwoFingerHorizSwipeGesture', '-bool', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+	'Mouse.User.MissionControl':{
+		'help':'Mouse.User.MissionControl'+pref_delim+'<int> ; 1 arg: 0 = off, 3 = enabled; user domain (10.14)',
+		'unit_tests':['Mouse.User.MissionControl'+pref_delim+'0',],
+		'10.14':[
+			{ 'type':'defaults', 'domain':'com.apple.AppleMultitouchMouse', 'args':['MouseTwoFingerDoubleTapGesture', '-int', '%ARG0%'], 'arg_count':1, },
+		],
+	},
+
+
 	##############
 	# QuickTime7 #
 	##############
 	'QuickTime7.User.ProName':{
 		'help':'Quicktime7.User.ProName'+pref_delim+'Johnny Appleseed - Set QuickTime 7 Pro Name; 1 arg; user/byhost domain (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['QuickTime7.User.ProName="University of Utah"',],
 		'byhost':True,
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.QuickTime', 'args':['Pro Key', '-dict-add', 'Name', '%ARG0%'], 'arg_count':1, },
@@ -472,7 +571,7 @@ pref_list = {
 	},
 	'QuickTime7.User.ProKey':{
 		'help':'Quicktime7.User.ProKey'+pref_delim+'1234-ABCD-1234-ABCD-1234 - Set QuickTime 7 Pro Registration Key; 1 arg; user/byhost domain (10.14)',
-		'unit_tests':['',],
+		'unit_tests':['QuickTime7.User.ProKey=38D3-F2CM-4MXT-QZBB-7CJT',],
 		'byhost':True,
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.QuickTime', 'args':['Pro Key', '-dict-add', 'Registration Key', '%ARG0%'], 'arg_count':1, },
@@ -483,7 +582,7 @@ pref_list = {
 	##########
 	'Safari.User.HomePage':{
 		'help':'Safari.User.HomePage'+pref_delim+'http://example.com - Set Safari\'s homepage; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Safari.User.HomePage=http://www.biology.utah.edu/centers/computing/student.php',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['HomePage', '%ARG0%'], 'arg_count':1, },
 		],
@@ -504,7 +603,7 @@ pref_list = {
 	},
 	'Safari.User.NewTabAndWindowBehavior':{
 		'help':'Safari.User.NewAndTabWindowBehavior'+pref_delim+'<int> - Sets what Safari shows in new tabs and windows; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Safari.User.NewTabAndWindowBehavior=0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['NewWindowBehavior', '-int', '%ARG0%'], 'arg_count':1, },
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['NewTabBehavior', '-int', '%ARG0%'], 'arg_count':1, },
@@ -512,7 +611,7 @@ pref_list = {
 	},
 	'Safari.User.Show_Tabs_Status_Favorites':{
 		'help':'Safari.User.Show_Tabs_Status_Favorites'+pref_delim+'<true|false> - Turns on or off Tab, Status, and Favorites bar; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Safari.User.Show_Tabs_Status_Favorites=true',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['AlwaysShowTabBar', '-bool', '%ARG0%'], 'arg_count':1, },
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['ShowOverlayStatusBar', '-bool', '%ARG0%'], 'arg_count':1, },
@@ -521,7 +620,7 @@ pref_list = {
 	},
 	'Safari.User.LastSafariVersionWithWelcomePage':{
 		'help':'Safari.User.LastSafariVersionWithWelcomePage'+pref_delim+'<string> - Gets rid of the Welcome to Safari message; 1 arg; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['Safari.User.LastSafariVersionWithWelcomePage=9.0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.Safari', 'args':['LastSafariVersionWithWelcomePage-v2', '-string', '%ARG0%'], 'arg_count':1, },
 		],
@@ -548,21 +647,21 @@ pref_list = {
 	###############
 	'ScreenSaver.Computer.Basic.Message':{
 		'help':'ScreenSaver.Computer.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; computer domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['ScreenSaver.Computer.Basic.Message=Computer Message=',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.ScreenSaver.Basic', 'args':['MESSAGE', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'ScreenSaver.Computer.Computer_Name_Clock':{
 		'help':'ScreenSaver.Computer.Computer_Name_Clock - Turns on Clock for Computer Name Module; computer domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['ScreenSaver.User.Computer_Name_Clock',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['showClock', '-bool', 'true'], },
 		],
 	},
 	'ScreenSaver.User.Basic.Message':{
 		'help':'ScreenSaver.User.Basic.Message'+pref_delim+'<Message> - Set the basic screensaver password; 1 arg; user/byhost domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['ScreenSaver.User.Basic.Message=User Message',],
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.ScreenSaver.Basic', 'args':['MESSAGE', '%ARG0%'], 'arg_count':1, },
@@ -570,7 +669,7 @@ pref_list = {
 	},
 	'ScreenSaver.User.Computer_Name':{
 		'help':'ScreenSaver.User.Computer_Name - Sets screensaver to Computer Name; user/byhost domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['ScreenSaver.User.Computer_Name',],
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['moduleDict', '-dict', 'path', '/System/Library/Frameworks/ScreenSaver.framework/Resources/Computer Name.saver'], },
@@ -586,7 +685,7 @@ pref_list = {
 	},
 	'ScreenSaver.User.askForPassword':{
 		'help':'ScreenSaver.User.askForPassword'+pref_delim+'<1|0> - Set screensaver password; 1 arg: 0 off, 1 on; user domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['ScreenSaver.User.askForPassword=0',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.screensaver', 'args':['askForPassword', '-int', '%ARG0%'], 'arg_count':1, },
 		],
@@ -596,21 +695,21 @@ pref_list = {
 	##################
 	'SetupAssistant.User.DidSeeAppearanceSetup':{
 		'help':'SetupAssistant.User.DidSeeAppearanceSetup'+pref_delim+'<true|false> - Hides login setup assistant; 1 arg: true/false; user domain (10.14-10.15)',
-		'unit_tests':['',],
+		'unit_tests':['SetupAssistant.User.DidSeeAppearanceSetup=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeAppearanceSetup', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SetupAssistant.User.DidSeePrivacy':{
 		'help':'SetupAssistant.User.DidSeePrivacy'+pref_delim+'<true|false> - Hides login setup assistant privacy question; 1 arg: true/false; user domain (10.14-10.15)',
-		'unit_tests':['',],
+		'unit_tests':['SetupAssistant.User.DidSeePrivacy=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeePrivacy', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
 	},
 	'SetupAssistant.User.DidSeeSiriSetup':{
 		'help':'SetupAssistant.User.DidSeeSiriSetup'+pref_delim+'<true|false> - Hides login setup assistant Siri question; 1 arg: true/false; user domain (10.14-10.15)',
-		'unit_tests':['',],
+		'unit_tests':['SetupAssistant.User.DidSeeSiriSetup=true',],
 		'10.14':[
 			{ 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeSiriSetup', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -684,7 +783,7 @@ pref_list = {
 	# https://derflounder.wordpress.com/2014/12/29/managing-automatic-app-store-and-os-x-update-installation-on-yosemite/
 	'SoftwareUpdate.Computer.AutomaticCheckEnabled':{
 		'help':'SoftwareUpdate.Computer.AutomaticCheckEnabled'+pref_delim+'<true|false> - "Automatically check for updates"; 1 arg: true/false; (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['SoftwareUpdate.Computer.AutomaticCheckEnabled=false',],
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.SoftwareUpdate', 'args':['AutomaticCheckEnabled', '-bool', '%ARG0%'], 'arg_count':1, },
 		],
@@ -723,7 +822,7 @@ pref_list = {
 	##################
 	'SystemUIServer.User.DontAutoLoadReset':{
 		'help':'SystemUIServer.User.DontAutoLoadReset - Erases all previous dont auto load items; user/byhost domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['SystemUIServer.User.DontAutoLoadReset',],
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.systemuiserver', 'command':'delete', 'args':['dontAutoLoad'], },
@@ -731,7 +830,7 @@ pref_list = {
 	},
 	'SystemUIServer.User.DontAutoLoad':{
 		'help':'SystemUIServer.User.DontAutoLoad'+pref_delim+'<path of menu extra> - ; user/byhost domain (10.11)',
-		'unit_tests':['',],
+		'unit_tests':['SystemUIServer.User.DontAutoLoad="/System/Library/CoreServices/Menu Extras/AirPort.menu"',],
 		'byhost':True,
 		'10.11':[
 			{ 'type':'defaults', 'domain':'com.apple.systemuiserver', 'args':['dontAutoLoad', '-array-add', '%ARG0%'], 'arg_count':1, },
@@ -770,7 +869,7 @@ pref_list = {
 	},
 	'Time.Computer.Zone':{
 		'help':'Time.Computer.Zone - (10.12)',
-		'unit_tests':['',],
+		'unit_tests':['Time.Computer.Zone'+pref_delim+'America/Denver',],
 		'10.12':[
 			{ 'type':'function', 'function':'systemsetup', 'args':['-settimezone', '%ARG0%'], 'arg_count':1, },
 		],
@@ -913,24 +1012,27 @@ def buildSysbolicHotkeys(pref_list):
 		'UpArrow'        : 126
 	}
 
-	# Modifiers
+	# Modifiers (see "NX_SHIFTMASK" in https://opensource.apple.com/source/IOHIDFamily/IOHIDFamily-1090.220.12/IOHIDSystem/IOKit/hidsystem/IOLLEvent.h.auto.html)
 	no_ascii = 65535
-	none = 65536
+	none = 65536 # alphashift (alphashift = caps lock--https://developer.apple.com/documentation/appkit/nsalphashiftkeymask)
 	shift = 131072
 	cntl = 262144
 	opt = 524288
 	cmd = 1048576
-	idk1 = 2097152
-	idk2 = 4194304
-	idk3 = 8388608 # It's the Fn key in some cases but not all
+	idk1 = 2097152 # numberic pad
+	idk2 = 4194304 # help
+	idk3 = 8388608 # secondary fn
+	#idk4 = 16777216 # alphashift stateless
+
 
 	symbolicHotKeysList = {
+		# See https://github.com/NUIKit/CGSInternal/blob/master/CGSHotKeys.h
 		# See https://krypted.com/mac-os-x/defaults-symbolichotkeys/
 		# System Prefs, Keyboard, Keyboard, Modifier Keys... are stored in ~/Library/Preferences/ByHost/.GlobalPreferences.UUID.plist under com.apple.keyboard.modifiermapping.alt_handler_id-61 HIDKeyboardModifierMappingDst:int HIDKeyboardModifierMappingSrc:int
 		# System Prefs, Keyboard, Keyboard, User F1, F2, etc. keys as standard function keys are stored in ~/Library/Preferences/.GlobalPreferences.plist under com.apple.keyboard.fnState:bool
 		# System Prefs, Keyboard, Shortcuts, Input Sources (more than one Input Source needs to be selected for this to be visible)
-		'PreviousInputSource':					{'num':60, 'parameters':[ord(' '), kc['Space'], cntl], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Input Sources, Select the previous input source
-		'NextInputSource':						{'num':61, 'parameters':[ord(' '), kc['Space'], cntl+opt],				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Input Sources, Select the next source in Input menu
+		'SelectPreviousInputSource':			{'num':60, 'parameters':[ord(' '), kc['Space'], cntl], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Input Sources, Select the previous input source
+		'SelectNextInputSource':				{'num':61, 'parameters':[ord(' '), kc['Space'], cntl+opt],				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Input Sources, Select the next source in Input menu
 		# System Prefs, Keyboard, Shortcuts, Launchpad & Dock
 		'ToggleDockVisibility':					{'num':52, 'parameters':[ord('d'), kc['D'], cmd+opt], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Launchpad & Dock, Turn Dock Hiding On/Off
 		'ShowLaunchpad':						{'num':160, 'parameters':[no_ascii, no_ascii, 0], 						'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Launchpad & Dock, Show Launchpad
@@ -941,18 +1043,18 @@ def buildSysbolicHotkeys(pref_list):
 		#	 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:55:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 		#	 /usr/libexec/PlistBuddy -c "Set :AppleSymbolicHotKeys:56:enabled false" ~/Library/Preferences/com.apple.symbolichotkeys.plist
 		# System Prefs, Keyboard, Shortcuts, Mission Control
-		'MissionControl':						{'num':32, 'parameters':[no_ascii, kc['UpArrow'], idk1+idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Mission Control
-		'MissionControl2':						{'num':34, 'parameters':[no_ascii, kc['UpArrow'], idk1+idk3+cntl+shift],'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Mission Control (Slow) - didn't work for me
+		'ExposeAllWindows':						{'num':32, 'parameters':[no_ascii, kc['UpArrow'], idk1+idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Mission Control
+		'ExposeAllWindowsSlow':					{'num':34, 'parameters':[no_ascii, kc['UpArrow'], idk1+idk3+cntl+shift],'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Mission Control (Slow) - didn't work for me
 		'ShowNotificationCenter':				{'num':163, 'parameters':[no_ascii, no_ascii, 0],		 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Notification Center
 		'ToggleDoNotDisturb':					{'num':175, 'parameters':[no_ascii, no_ascii, 0], 						'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Turn Do Not Disturb On/Off
-		'ApplicationWindows':					{'num':33, 'parameters':[no_ascii, kc['DownArrow'], idk3+cntl], 		'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Application windows
-		'ApplicationWindows2':					{'num':35, 'parameters':[no_ascii, kc['DownArrow'], idk3+cntl+shift],	'enabled':0, 'type':'standard' },	# System Prefs, Keyboard, Shortcuts, Mission Control, Application windows (Slow) - didn't work for me
-		'ShowDesktop':							{'num':36, 'parameters':[no_ascii, kc['F11'], idk3], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Desktop
-		'ShowDesktop2':							{'num':37, 'parameters':[no_ascii, kc['F11'], idk3+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Desktop (Slow) - didn't work for me
-		'ShowDashboard':						{'num':62, 'parameters':[no_ascii, kc['F12'], idk3], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Dashboard
-		'ShowDashboard2':						{'num':63, 'parameters':[no_ascii, kc['F12'], idk3+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Dashboard (Slow) - didn't work for me
-		'MoveLeftSpace':						{'num':79, 'parameters':[no_ascii, kc['LeftArrow'], idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Move left a space
-		'MoveRightSpace':						{'num':81, 'parameters':[no_ascii, kc['RightArrow'], idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Move right a space
+		'ExposeApplicationWindows':				{'num':33, 'parameters':[no_ascii, kc['DownArrow'], idk3+cntl], 		'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Application windows
+		'ExposeApplicationWindowsSlow':			{'num':35, 'parameters':[no_ascii, kc['DownArrow'], idk3+cntl+shift],	'enabled':0, 'type':'standard' },	# System Prefs, Keyboard, Shortcuts, Mission Control, Application windows (Slow) - didn't work for me
+		'ExposeDesktop':						{'num':36, 'parameters':[no_ascii, kc['F11'], idk3], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Desktop
+		'ExposeDesktopsSlow':					{'num':37, 'parameters':[no_ascii, kc['F11'], idk3+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Desktop (Slow) - didn't work for me
+		'Dashboard':							{'num':62, 'parameters':[no_ascii, kc['F12'], idk3], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Dashboard
+		'DashboardSlow':						{'num':63, 'parameters':[no_ascii, kc['F12'], idk3+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Show Dashboard (Slow) - didn't work for me
+		'SpaceLeft':							{'num':79, 'parameters':[no_ascii, kc['LeftArrow'], idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Move left a space
+		'SpaceRight':							{'num':81, 'parameters':[no_ascii, kc['RightArrow'], idk3+cntl], 		'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Move right a space
 		'SwitchToDesktop1':						{'num':118, 'parameters':[no_ascii, kc['1'], cntl], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Switch to Desktop 1
 		'SwitchToDesktop2':						{'num':119, 'parameters':[no_ascii, kc['2'], cntl], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Switch to Desktop 2
 		'SwitchToDesktop3':						{'num':120, 'parameters':[no_ascii, kc['3'], cntl], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Switch to Desktop 3
@@ -968,39 +1070,39 @@ def buildSysbolicHotkeys(pref_list):
 		'SwitchToDesktop13':					{'num':130, 'parameters':[no_ascii, kc['3'], cntl+opt], 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Mission Control, Switch to Desktop 13
 		# etc, how many spaces can you get?...
 		# System Prefs, Keyboard, Shortcuts, Keyboard
-		'ToggleFullKeyboardAccess':				{'num':13, 'parameters':[no_ascii, kc['F7'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Change the way Tab moves focus
-		'ToggleKeyboardAccess':					{'num':12, 'parameters':[no_ascii, kc['F1'], idk3+cntl],				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Turn keyboard access on or off
+		'FocusNextControl':						{'num':13, 'parameters':[no_ascii, kc['F7'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Change the way Tab moves focus
+		'ToggleFullKeyboardAccess':				{'num':12, 'parameters':[no_ascii, kc['F1'], idk3+cntl],				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Turn keyboard access on or off
 		'FocusMenuBar':							{'num':7, 'parameters':[no_ascii, kc['F2'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the menu bar
 		'FocusDock':							{'num':8, 'parameters':[no_ascii, kc['F3'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the Dock
-		'FocusActiveOrNextWindow':				{'num':9, 'parameters':[no_ascii, kc['F4'], idk3+cntl], 				'enabled':1, 'type':'standard' },	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to active or next window
-		'FocusWindowToolbar':					{'num':10, 'parameters':[no_ascii, kc['F5'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to window toolbar
+		'FocusNextGlobalWindow':				{'num':9, 'parameters':[no_ascii, kc['F4'], idk3+cntl], 				'enabled':1, 'type':'standard' },	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to active or next window
+		'FocusToolbar':							{'num':10, 'parameters':[no_ascii, kc['F5'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to window toolbar
 		'FocusFloatingWindow':					{'num':11, 'parameters':[no_ascii, kc['F6'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to floating window
-		'FocusNextWindow':						{'num':27, 'parameters':[ord('`'), kc['Grave'], cmd], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the next window
-		'FocusWindowDrawer':					{'num':51, 'parameters':[ord('`'), kc['Grave'], cmd+opt],				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the window drawer
-		'FocusStatusMenus':						{'num':57, 'parameters':[no_ascii, kc['F8'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the status menus
+		'FocusApplicationWindow':				{'num':27, 'parameters':[ord('`'), kc['Grave'], cmd], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the next window
+		'FocusDrawer':							{'num':51, 'parameters':[ord('`'), kc['Grave'], cmd+opt],				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the window drawer
+		'FocusStatusItems':						{'num':57, 'parameters':[no_ascii, kc['F8'], idk3+cntl], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Keyboard, Move focus to the status menus
 		# System Prefs, Keyboard, Shortcuts, Screenshots
-		'SnapshotScreen':						{'num':28, 'parameters':[ord('3'), kc['3'], cmd+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Save picture of screen as file
-		'SnapshotScreenFile':					{'num':29, 'parameters':[ord('3'), kc['3'], cmd+cntl+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Copy picture of screen to the clipboard
-		'SnapshotArea':							{'num':30, 'parameters':[ord('4'), kc['4'], cmd+shift],					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Save picture of selected area as file
-		'SnapshotAreaFile':						{'num':31, 'parameters':[ord('4'), kc['4'], cmd+cntl+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Copy picture of selected area to the clipboard
+		'Screenshot':							{'num':28, 'parameters':[ord('3'), kc['3'], cmd+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Save picture of screen as file
+		'ScreenshotToClipboard':				{'num':29, 'parameters':[ord('3'), kc['3'], cmd+cntl+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Copy picture of screen to the clipboard
+		'ScreenshotRegion':						{'num':30, 'parameters':[ord('4'), kc['4'], cmd+shift],					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Save picture of selected area as file
+		'ScreenshotRegionToClipboard':			{'num':31, 'parameters':[ord('4'), kc['4'], cmd+cntl+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Copy picture of selected area to the clipboard
 		'SnapshotRecording':					{'num':184, 'parameters':[ord('5'), kc['5'], cmd+shift], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Screenshots, Screenshot and recording options
 		# System Prefs, Keyboard, Shortcuts, Services
 		# System Prefs, Keyboard, Shortcuts, Spotlight
-		'SpotlightSearch':						{'num':64, 'parameters':[no_ascii, kc['Space'], cmd], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Spotlight, Show Spotlight search
-		'FinderSearch':							{'num':65, 'parameters':[no_ascii, kc['Space'], cmd+opt], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Spotlight, Show Finder search window
+		'SpotlightSearchField':					{'num':64, 'parameters':[no_ascii, kc['Space'], cmd], 					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Spotlight, Show Spotlight search
+		'SpotlightWindow':						{'num':65, 'parameters':[no_ascii, kc['Space'], cmd+opt], 				'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Spotlight, Show Finder search window
 		# System Prefs, Keyboard, Shortcuts, Accessibility
 		'ToggleZoom':							{'num':15, 'parameters':[ord('8'), kc['8'], cmd+opt], 					'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Turn zoom on or off
-		'ToggleSmoothImages':					{'num':23, 'parameters':[ord('\\'), kc['Backslash'], cmd+opt], 			'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Turn image image smoothing on or off
+		'ZoomToggleSmoothing':					{'num':23, 'parameters':[ord('\\'), kc['Backslash'], cmd+opt], 			'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Turn image image smoothing on or off
 		'ZoomOut':								{'num':19, 'parameters':[ord('-'), kc['Minus'], cmd+opt], 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Zoom out
 		'ZoomIn':								{'num':17, 'parameters':[ord('='), kc['Equal'], cmd+opt], 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Zoom in
 		'ToggleFocusFollowing':					{'num':179, 'parameters':[no_ascii, no_ascii, 0], 						'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Zoom, Turn focus following on or off
 		'IncreaseContrast':						{'num':25, 'parameters':[ord('.'), kc['Period'], cmd+cntl+opt],			'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Contrast, Increase contrast
 		'DecreaseContrast':						{'num':26, 'parameters':[ord(','), kc['Comma'], cmd+cntl+opt], 			'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Contrast, Decrease contrast
-		'InvertColors':							{'num':21, 'parameters':[ord('8'), kc['8'], cmd+cntl+opt], 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Invert colors
+		'InvertScreen':							{'num':21, 'parameters':[ord('8'), kc['8'], cmd+cntl+opt], 				'enabled':0, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Invert colors
 		'ToggleVoiceOver':						{'num':59, 'parameters':[no_ascii, kc['F5'], idk3+cmd],					'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Turn VoiceOver on or off
 		'ShowAccessibilityControls':			{'num':162, 'parameters':[no_ascii, kc['F5'], idk3+cmd+opt], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, Accessibility, Show Accessibility controls
 		# System Prefs, Keyboard, Shortcuts, App Shortcuts
-		'Show Help menu':						{'num':98, 'parameters':[ord('/'), kc['Slash'], cmd+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, App Shortcuts, Show Help menu
+		'Help':									{'num':98, 'parameters':[ord('/'), kc['Slash'], cmd+shift], 			'enabled':1, 'type':'standard' }, 	# System Prefs, Keyboard, Shortcuts, App Shortcuts, Show Help menu
 		# System Prefs, Keyboard, Dictation
 		'DictationShortcut':					{'num':164, 'parameters':[8388608, 18446744073701163007], 				'enabled':1, 'type':'modifier' }, 	# System Prefs, Keyboard, Dictation, Shortcut
 															# 8388608, 18446744073701163007 = Press Fn (Function) Key Twice
@@ -1908,7 +2010,7 @@ Usage: %s [-t] command
 	              can be thrown away like a snapshotted VM!
 
 Commands
-''' % (name)
+''' % (name, name)
 			mak_commands_with_help = mak_commands.keys()
 			mak_commands_with_help.append('help')
 			for mak_command in sorted( mak_commands_with_help ):
@@ -1978,7 +2080,7 @@ def main():
 		if command in mak_commands and 'main' in mak_commands[command]:
 			main_name = mak_commands[command]['main']
 			if unit_tests:
-				confirm = input("WARNING: This will overwrite lots of prefs, are you sure (y/N)? ")
+				confirm = raw_input("WARNING: This will overwrite lots of prefs, are you sure (y/N)? ") # Python 3 is input
 				if confirm == "y":
 					if main_name in globals():
 						globals()[main_name+"_unit_tests"](args[1:])
