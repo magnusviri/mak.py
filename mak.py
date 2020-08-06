@@ -28,9 +28,10 @@ from shutil import copyfile
 jamf = False
 debug = False
 verbose = False
+quiet - False
 mak_commands = {}
 
-version = '1.1.6'
+version = '1.1.7'
 
 ##########################################################################################
 
