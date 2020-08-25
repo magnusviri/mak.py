@@ -93,55 +93,6 @@ pref_list = {
             { 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['AppleKeyboardUIMode', '-int', '%ARG0%'], 'arg_count':1, },
         ],
     },
-    'Global.User.FullKeyboardAccess':{
-        'help':'Global.User.FullKeyboardAccess - (10.14)',
-        'help':'Global.User.FullKeyboardAccess'+pref_delim+'<int> - changing this pref requires a logout/login ; 1 arg: 0 = Text boxes and lists only, 2 = All controls; user domain (10.14)',
-        'unit_tests':['Global.User.FullKeyboardAccess'+pref_delim+'2',],
-        '10.14':[
-            { 'type':'defaults', 'domain':'.GlobalPreferences', 'args':['AppleKeyboardUIMode', '-int', '%ARG0%'], 'arg_count':1, },
-        ],
-    },
-
-#     <key>KeyRepeat</key>
-#     <integer>2</integer>
-# 120, 90, 60, 30, 15, 12, 6, 2 fastest
-#
-#     <key>InitialKeyRepeat</key>
-#     <integer>120</integer>
-# off 300000, slowest 120, 94, 68, 35, 25, 15 fastest
-#
-# NSAutomaticCapitalizationEnabled
-# NSAutomaticDashSubstitutionEnabled
-# NSAutomaticPeriodSubstitutionEnabled
-# NSAutomaticQuoteSubstitutionEnabled
-# NSAutomaticSpellingCorrectionEnabled
-# NSAutomaticTextCompletionEnabled true
-#
-#     <key>NSPreferredWebServices</key>
-#     <dict>
-#         <key>NSWebServicesProviderWebSearch</key>
-#         <dict>
-#             <key>NSDefaultDisplayName</key>
-#             <string>DuckDuckGo</string>
-#             <key>NSProviderIdentifier</key>
-#             <string>com.duckduckgo</string>
-#         </dict>
-#     </dict>
-#
-#     <key>NSUserDictionaryReplacementItems</key>
-#     <array>
-#         <dict>
-#             <key>on</key>
-#             <integer>1</integer>
-#             <key>replace</key>
-#             <string>omw</string>
-#             <key>with</key>
-#             <string>On my way!</string>
-#         </dict>
-#     </array>
-
-
-
     ########################
     # Apple Remote Desktop #
     ########################
