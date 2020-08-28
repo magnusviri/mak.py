@@ -645,6 +645,111 @@ pref_list = {
     ##################
     # SetupAssistant #
     ##################
+    'SetupAssistant.User.DidSeeActivationLock':{
+        'help':'SetupAssistant.User.DidSeeActivationLock'+pref_delim+'<true|false> - Hides login setup assistant question; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.DidSeeActivationLock=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeActivationLock', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.DidSeeScreenTime':{
+        'help':'SetupAssistant.User.DidSeeScreenTime'+pref_delim+'<true|false> - Hides login setup assistant question; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.DidSeeScreenTime=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['DidSeeScreenTime', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.MiniBuddyLaunchReason':{
+        'help':'SetupAssistant.User.MiniBuddyLaunchReason'+pref_delim+'<true|false> - ?; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.MiniBuddyLaunchReason=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['MiniBuddyLaunchReason', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.MiniBuddyLaunchedPostMigration':{
+        'help':'SetupAssistant.User.MiniBuddyLaunchedPostMigration'+pref_delim+'<true|false> - ?; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.MiniBuddyLaunchedPostMigration=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['MiniBuddyLaunchedPostMigration', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.MiniBuddyShouldLaunchToResumeSetup':{
+        'help':'SetupAssistant.User.MiniBuddyShouldLaunchToResumeSetup'+pref_delim+'<true|false> - ?; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.MiniBuddyShouldLaunchToResumeSetup=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['MiniBuddyShouldLaunchToResumeSetup', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.SkipFirstLoginOptimization':{
+        'help':'SetupAssistant.User.SkipFirstLoginOptimization'+pref_delim+'<true|false> - ?; 1 arg: true/false; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.SkipFirstLoginOptimization=true',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['SkipFirstLoginOptimization', '-bool', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.MiniBuddyLaunchReason':{
+        'help':'SetupAssistant.User.MiniBuddyLaunchReason'+pref_delim+'<1|0> - ?; 1 arg: 0 off, 1 on; user domain (10.11)',
+        'unit_tests':['SetupAssistant.User.MiniBuddyLaunchReason=0',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['MiniBuddyLaunchReason', '-int', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.LastPreLoginTasksPerformedBuild':{
+        'help':'SetupAssistant.User.LastPreLoginTasksPerformedBuild'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.LastPreLoginTasksPerformedBuild=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['LastPreLoginTasksPerformedBuild', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.LastPreLoginTasksPerformedVersion':{
+        'help':'SetupAssistant.User.LastPreLoginTasksPerformedVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.LastPreLoginTasksPerformedVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['LastPreLoginTasksPerformedVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.LastPrivacyBundleVersion':{
+        'help':'SetupAssistant.User.LastPrivacyBundleVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.LastPrivacyBundleVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['LastPrivacyBundleVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.LastSeenBuddyBuildVersion':{
+        'help':'SetupAssistant.User.LastSeenBuddyBuildVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.LastSeenBuddyBuildVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['LastSeenBuddyBuildVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.LastSeenSiriProductVersion':{
+        'help':'SetupAssistant.User.LastSeenSiriProductVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.LastSeenSiriProductVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['LastSeenSiriProductVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.NSAddServicesToContextMenus':{
+        'help':'SetupAssistant.User.NSAddServicesToContextMenus'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.NSAddServicesToContextMenus=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['NSAddServicesToContextMenus', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.PreviousBuildVersion':{
+        'help':'SetupAssistant.User.PreviousBuildVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.PreviousBuildVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['PreviousBuildVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
+    'SetupAssistant.User.PreviousSystemVersion':{
+        'help':'SetupAssistant.User.PreviousSystemVersion'+pref_delim+'<string>  - ?; 1 arg; user domain (10.15)',
+        'unit_tests':['SetupAssistant.User.PreviousSystemVersion=abc',],
+        '10.15':[
+            { 'type':'defaults', 'domain':'com.apple.SetupAssistant', 'args':['PreviousSystemVersion', '-string', '%ARG0%'], 'arg_count':1, },
+        ],
+    },
     'SetupAssistant.User.DidSeeAppearanceSetup':{
         'help':'SetupAssistant.User.DidSeeAppearanceSetup'+pref_delim+'<true|false> - Hides login setup assistant; 1 arg: true/false; user domain (10.14-10.15)',
         'unit_tests':['SetupAssistant.User.DidSeeAppearanceSetup=true',],
